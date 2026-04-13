@@ -55,14 +55,14 @@ ARG VERSION_TAG
 WORKDIR /app
 
 # Application layers
-COPY --link --from=jar-extract --chown=1000:1000 /layers/dependencies/           /app/
-COPY --link --from=jar-extract --chown=1000:1000 /layers/spring-boot-loader/     /app/
-COPY --link --from=jar-extract --chown=1000:1000 /layers/snapshot-dependencies/  /app/
-COPY --link --from=jar-extract --chown=1000:1000 /layers/application/            /app/
+COPY --from=jar-extract --chown=1000:1000 /layers/dependencies/           /app/
+COPY --from=jar-extract --chown=1000:1000 /layers/spring-boot-loader/     /app/
+COPY --from=jar-extract --chown=1000:1000 /layers/snapshot-dependencies/  /app/
+COPY --from=jar-extract --chown=1000:1000 /layers/application/            /app/
 
-COPY --link --from=app-build --chown=1000:1000 \
+COPY --from=app-build --chown=1000:1000 \
      /app/build/libs/restart-helper.jar /restart-helper.jar
-COPY --link --chown=1000:1000 scripts/ /scripts/
+COPY --chown=1000:1000 scripts/ /scripts/
 
 # Fonts go to system dir, root ownership is correct (world-readable)
 COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/truetype/
