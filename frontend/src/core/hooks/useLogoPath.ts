@@ -17,6 +17,6 @@ export function useLogoPath(): string {
 
   return useMemo(() => {
     const themeSuffix = colorScheme === 'dark' ? 'Dark' : 'Light';
-    return `${folderPath}/StirlingPDFLogoNoText${themeSuffix}.svg`;
+    return `${folderPath}/StirlingPDFLogoNoText${themeSuffix}.png`;
   }, [colorScheme, folderPath]);
 }
