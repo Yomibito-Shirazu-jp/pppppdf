@@ -91,7 +91,16 @@ ENV VERSION_TAG=$VERSION_TAG \
     _JVM_OPTS_BALANCED="-XX:+ExitOnOutOfMemoryError -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/configs/heap_dumps -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:G1HeapRegionSize=4m -XX:G1PeriodicGCInterval=60000 -XX:+UseStringDeduplication -XX:+UseCompactObjectHeaders -XX:+ExplicitGCInvokesConcurrent -Dspring.threads.virtual.enabled=true -Djava.awt.headless=true" \
     _JVM_OPTS_PERFORMANCE="-XX:+ExitOnOutOfMemoryError -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/configs/heap_dumps -XX:+UseShenandoahGC -XX:ShenandoahGCMode=generational -XX:+UseCompactObjectHeaders -XX:+UseStringDeduplication -XX:+AlwaysPreTouch -XX:+ExplicitGCInvokesConcurrent -Dspring.threads.virtual.enabled=true -Djava.awt.headless=true" \
     JAVA_CUSTOM_OPTS="" \
-    SAL_TMP=/tmp/stirling-pdf/libre
+    SAL_TMP=/tmp/stirling-pdf/libre \
+    DOCKER_ENABLE_SECURITY="true" \
+    SECURITY_ENABLELOGIN="true" \
+    SECURITY_INITIALLOGIN_USERNAME="admin" \
+    SECURITY_INITIALLOGIN_PASSWORD="changeme" \
+    DISABLE_ADDITIONAL_FEATURES="false" \
+    SYSTEM_DEFAULTLOCALE="ja-JP" \
+    SYSTEM_GOOGLEVISIBILITY="false" \
+    SHOW_SURVEY="false" \
+    SYSTEM_MAXFILESIZE="500"
 
 # Metadata labels
 LABEL org.opencontainers.image.title="Stirling-PDF" \
