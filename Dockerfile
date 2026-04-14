@@ -67,6 +67,10 @@ COPY --chown=1000:1000 scripts/ /scripts/
 # Fonts go to system dir, root ownership is correct (world-readable)
 COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/truetype/
 
+# Japanese OCR data (not included in base image)
+ADD https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/jpn.traineddata /usr/share/tesseract-ocr/5/tessdata/jpn.traineddata
+ADD https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/jpn_vert.traineddata /usr/share/tesseract-ocr/5/tessdata/jpn_vert.traineddata
+
 # Permissions and configuration
 RUN set -eux; \
     chmod +x /scripts/*; \
