@@ -5,7 +5,7 @@ ARG BASE_VERSION=1.0.0
 ARG BASE_IMAGE=ghcr.io/stirling-tools/stirling-pdf-base:${BASE_VERSION}
 
 # Stage 1: Build the Java application and frontend
-FROM gradle:9.3.1-jdk25 AS app-build
+FROM gradle:9.4.1-jdk25 AS app-build
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl ca-certificates \
