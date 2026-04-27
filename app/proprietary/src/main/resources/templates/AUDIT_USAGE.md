@@ -1,6 +1,6 @@
-# Stirling PDF Audit System
+# B-PDF Audit System
 
-This document provides guidance on how to use the audit system in Stirling PDF.
+This document provides guidance on how to use the audit system in B-PDF.
 
 ## Overview
 

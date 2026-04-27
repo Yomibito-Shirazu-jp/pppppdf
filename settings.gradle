@@ -23,7 +23,7 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
-rootProject.name = 'Stirling PDF'
+rootProject.name = 'B-PDF'
 
 include 'stirling-pdf', 'common', 'proprietary'
 

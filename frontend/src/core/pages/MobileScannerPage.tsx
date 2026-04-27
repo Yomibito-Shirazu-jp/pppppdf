@@ -794,12 +794,12 @@ export default function MobileScannerPage() {
         <Group gap="sm" align="center">
           <img
             src={brandIconSrc}
-            alt={t('home.mobile.brandAlt', 'Stirling PDF logo')}
+            alt={t('home.mobile.brandAlt', 'B-PDF logo')}
             style={{ height: '32px', width: '32px' }}
           />
           <img
             src={brandTextSrc}
-            alt="Stirling PDF"
+            alt="B-PDF"
             style={{ height: '24px' }}
           />
         </Group>

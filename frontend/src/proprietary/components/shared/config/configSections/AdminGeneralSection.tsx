@@ -388,7 +388,7 @@ export default function AdminGeneralSection() {
               description={t('admin.settings.general.appNameNavbar.description', 'The name displayed in the navigation bar')}
               value={settings.ui?.appNameNavbar || ''}
               onChange={(e) => setSettings({ ...settings, ui: { ...settings.ui, appNameNavbar: e.target.value } })}
-              placeholder="Stirling PDF"
+              placeholder="B-PDF"
               disabled={!loginEnabled}
             />
           </div>

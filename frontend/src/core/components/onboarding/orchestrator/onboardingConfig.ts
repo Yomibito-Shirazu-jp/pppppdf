@@ -78,8 +78,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     id: 'welcome',
     type: 'modal-slide',
     slideId: 'welcome',
-    // Desktop has its own onboarding modal (DesktopOnboardingModal)
-    condition: (ctx) => !ctx.isDesktopApp,
+    condition: () => false,
   },
   {
     id: 'admin-overview',

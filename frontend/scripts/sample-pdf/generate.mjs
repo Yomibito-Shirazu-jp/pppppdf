@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * Stirling PDF Sample Document Generator
+ * B-PDF Sample Document Generator
  *
  * This script uses Puppeteer to generate a sample PDF from a HTML template.
  * The output is used in the onboarding tour and as a demo document
- * for users to experiment with Stirling PDF's features.
+ * for users to experiment with B-PDF's features.
  */
 
 import puppeteer from 'puppeteer';
@@ -21,7 +21,7 @@ const OUTPUT_DIR = join(__dirname, '../../public/samples');
 const OUTPUT_PATH = join(OUTPUT_DIR, 'Sample.pdf');
 
 async function generatePDF() {
-  console.log('🚀 Starting Stirling PDF sample document generation...\n');
+  console.log('🚀 Starting B-PDF sample document generation...\n');
 
   // Ensure output directory exists
   if (!existsSync(OUTPUT_DIR)) {
@@ -95,7 +95,7 @@ async function generatePDF() {
     }
   }
 
-  console.log('\n🎉 Done! Sample PDF is ready for use in Stirling PDF.\n');
+  console.log('\n🎉 Done! Sample PDF is ready for use in B-PDF.\n');
 }
 
 // Run the generator

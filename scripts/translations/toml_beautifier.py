@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TOML Beautifier and Structure Fixer for Stirling PDF Frontend
+TOML Beautifier and Structure Fixer for B-PDF Frontend
 Restructures translation TOML files to match en-GB structure and key order exactly.
 """
 

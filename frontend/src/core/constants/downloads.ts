@@ -1,4 +1,4 @@
-// Centralized download URLs for Stirling PDF desktop installers
+// Centralized download URLs for B-PDF desktop installers
 export const DOWNLOAD_URLS = {
   WINDOWS: 'https://files.stirlingpdf.com/win-installer.exe',
   MAC_APPLE_SILICON: 'https://files.stirlingpdf.com/mac-installer.dmg',
