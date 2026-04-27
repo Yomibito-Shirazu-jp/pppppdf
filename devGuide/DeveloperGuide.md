@@ -61,7 +61,7 @@ Visit the [Lombok website](https://projectlombok.org/setup/) for installation in
    missing, so having it installed locally allows you to exercise the full workflow.
 
 6. Add environment variable
-For local testing, you should generally be testing the full 'Security' version of Stirling PDF. To do this, you must add the environment flag DISABLE_ADDITIONAL_FEATURES=false to your system and/or IDE build/run step.
+For local testing, you should generally be testing the full 'Security' version of B-PDF. To do this, you must add the environment flag DISABLE_ADDITIONAL_FEATURES=false to your system and/or IDE build/run step.
 
 ## 4. Project Structure
 

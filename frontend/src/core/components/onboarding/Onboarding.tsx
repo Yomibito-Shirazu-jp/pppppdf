@@ -73,12 +73,10 @@ export default function Onboarding() {
     actions.complete();
   }, [actions]);
 
-  // Check if we should show analytics modal before onboarding
+  // Analytics opt-in modal disabled for internal deployment
   useEffect(() => {
-    if (!isLoading && !analyticsModalDismissed && serverExperience.effectiveIsAdmin && config?.enableAnalytics == null) {
-      setShowAnalyticsModal(true);
-    }
-  }, [isLoading, analyticsModalDismissed, serverExperience.effectiveIsAdmin, config?.enableAnalytics]);
+    setShowAnalyticsModal(false);
+  }, []);
 
   const handleAnalyticsChoice = useCallback(async (enableAnalytics: boolean) => {
     if (analyticsLoading) return;

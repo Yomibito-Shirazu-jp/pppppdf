@@ -1370,7 +1370,7 @@ description = "Când este activat, doar ID-urile de utilizator listate pot folos
 label = "Permite ID-uri specifice de utilizator"
 
 [admin.settings.telegram.enabled]
-description = "Permite utilizatorilor să interacționeze cu Stirling PDF prin botul Telegram configurat."
+description = "Permite utilizatorilor să interacționeze cu B-PDF prin botul Telegram configurat."
 label = "Activează botul Telegram"
 
 [admin.settings.telegram.feedback]
@@ -1447,7 +1447,7 @@ settingsOverview = "Acesta este <strong>Panoul de setări</strong>. Setările de
 systemCustomization = "Avem modalități extinse de a personaliza UI: <strong>Setările sistemului</strong> vă permit să schimbați numele aplicației și limbile, <strong>Funcții</strong> permite gestionarea certificatelor serverului, iar <strong>Puncte finale</strong> vă permite să activați sau să dezactivați instrumente specifice pentru utilizatorii dvs."
 teamsAndUsers = "Gestionați aici <strong>Echipe</strong> și utilizatori individuali. Puteți invita utilizatori noi prin email, linkuri partajabile sau le puteți crea conturi personalizate."
 welcome = "Bun venit la <strong>Turul Admin</strong>! Haideți să explorăm funcțiile enterprise și setările puternice disponibile administratorilor de sistem."
-wrapUp = "Acesta a fost turul admin! Ați văzut funcțiile enterprise care fac din Stirling PDF o soluție puternică și personalizabilă pentru organizații. Accesați acest tur oricând din meniul <strong>Ajutor</strong>."
+wrapUp = "Acesta a fost turul admin! Ați văzut funcțiile enterprise care fac din B-PDF o soluție puternică și personalizabilă pentru organizații. Accesați acest tur oricând din meniul <strong>Ajutor</strong>."
 
 [adminUserSettings]
 actions = "Acțiuni"
@@ -1484,11 +1484,11 @@ webOnlyUser = "Utilizator Doar Web"
 disable = "Dezactivați analizele"
 enable = "Activați analizele"
 learnMore = "Aflați mai multe"
-paragraph1 = "Stirling PDF are analize opționale pentru a ne ajuta să îmbunătățim produsul. Nu urmărim nicio informație personală sau conținutul fișierelor."
+paragraph1 = "B-PDF are analize opționale pentru a ne ajuta să îmbunătățim produsul. Nu urmărim nicio informație personală sau conținutul fișierelor."
 paragraph2 = "Vă rugăm să luați în considerare activarea analizelor pentru a ajuta Stirling-PDF să crească și pentru a ne permite să ne înțelegem mai bine utilizatorii."
 privacyAssurance = "Nu urmărim nicio informație personală și nici conținutul fișierelor tale."
 settings = "Puteți schimba setările pentru analize în fișierul config/settings.yml"
-title = "Vreți să faceți Stirling PDF mai bun?"
+title = "Vreți să faceți B-PDF mai bun?"
 
 [annotation]
 applyChanges = "Aplică modificările"
@@ -1876,7 +1876,7 @@ title = "Împarte Automat PDF"
 [autoSplitPDF.selectText]
 1 = "Tipărește câteva foi separatoare de mai jos (Alb-negru este suficient)."
 2 = "Scanează toate documentele tale o dată inserând foaia separatoare între ele."
-3 = "Încarcă fișierul PDF scanat mare și lasă Stirling PDF să se ocupe de rest."
+3 = "Încarcă fișierul PDF scanat mare și lasă B-PDF să se ocupe de rest."
 4 = "Paginile separatoare sunt detectate automat și eliminate, garantând un document final ordonat."
 
 [backendHealth]
@@ -2646,14 +2646,14 @@ chartAriaLabel = "Utilizare credite: incluse {{includedUsed}} din {{includedTota
 copyKeyAriaLabel = "Copiați cheia API"
 creditsRemaining = "Credite rămase"
 description = "Cheia dvs. API pentru accesarea suitei de instrumente PDF Stirling. Copiați-o în proiectul dvs. sau reîmprospătați pentru a genera una nouă."
-docsDescription = "Aflați mai multe despre integrarea cu Stirling PDF:"
+docsDescription = "Aflați mai multe despre integrarea cu B-PDF:"
 docsLink = "Documentație API"
 docsTitle = "Documentație API"
 generateError = "Nu am putut genera cheia API."
 goToAccount = "Mergeți la Cont"
 guestInfo = "Utilizatorii invitați nu primesc chei API. Creați un cont pentru a obține o cheie API pe care o puteți folosi în aplicațiile dvs."
 includedCredits = "Credite incluse"
-intro = "Folosiți cheia API pentru a accesa programatic capabilitățile de procesare ale Stirling PDF."
+intro = "Folosiți cheia API pentru a accesa programatic capabilitățile de procesare ale B-PDF."
 label = "Cheie API"
 lastApiUse = "Ultima utilizare API"
 nextReset = "Resetare următoare"
@@ -2827,7 +2827,7 @@ showPreferencesBtn = "Gestionați preferințele"
 title = "Cum folosim cookie-urile"
 
 [cookieBanner.popUp.description]
-1 = "Folosim cookie-uri și alte tehnologii pentru a face Stirling PDF să funcționeze mai bine pentru dvs.—ajutându-ne să ne îmbunătățim instrumentele și să continuăm să dezvoltăm funcții pe placul dvs."
+1 = "Folosim cookie-uri și alte tehnologii pentru a face B-PDF să funcționeze mai bine pentru dvs.—ajutându-ne să ne îmbunătățim instrumentele și să continuăm să dezvoltăm funcții pe placul dvs."
 2 = "If you’d rather not, clicking 'No Thanks' will only enable the essential cookies needed to keep things running smoothly."
 
 [cookieBanner.preferencesModal]
@@ -2840,12 +2840,12 @@ subtitle = "Utilizarea cookie-urilor"
 title = "Centrul preferințelor de consimțământ"
 
 [cookieBanner.preferencesModal.analytics]
-description = "Aceste cookie-uri ne ajută să înțelegem cum sunt folosite instrumentele noastre, astfel încât să ne concentrăm pe construirea funcțiilor pe care comunitatea noastră le apreciază cel mai mult. Stați liniștit—Stirling PDF nu poate și nu va urmări conținutul documentelor cu care lucrați."
+description = "Aceste cookie-uri ne ajută să înțelegem cum sunt folosite instrumentele noastre, astfel încât să ne concentrăm pe construirea funcțiilor pe care comunitatea noastră le apreciază cel mai mult. Stați liniștit—B-PDF nu poate și nu va urmări conținutul documentelor cu care lucrați."
 title = "Analiză"
 
 [cookieBanner.preferencesModal.description]
-1 = "Stirling PDF folosește cookie-uri și tehnologii similare pentru a vă îmbunătăți experiența și a înțelege cum sunt folosite instrumentele noastre. Aceasta ne ajută să îmbunătățim performanța, să dezvoltăm funcțiile care vă interesează și să oferim suport constant utilizatorilor noștri."
-2 = "Stirling PDF nu poate—și nu va—urmări sau accesa conținutul documentelor pe care le utilizați."
+1 = "B-PDF folosește cookie-uri și tehnologii similare pentru a vă îmbunătăți experiența și a înțelege cum sunt folosite instrumentele noastre. Aceasta ne ajută să îmbunătățim performanța, să dezvoltăm funcțiile care vă interesează și să oferim suport constant utilizatorilor noștri."
+2 = "B-PDF nu poate—și nu va—urmări sau accesa conținutul documentelor pe care le utilizați."
 3 = "Confidențialitatea și încrederea dvs. sunt în centrul a tot ceea ce facem."
 
 [cookieBanner.preferencesModal.necessary]
@@ -2943,7 +2943,7 @@ unexpectedError = "A apărut o eroare la procesarea fișierului. Vă rugăm să 
 [defaultApp]
 description = "Poți schimba asta mai târziu din setările sistemului."
 dismiss = "Închide"
-message = "Vrei să setezi Stirling PDF ca editorul tău PDF implicit?"
+message = "Vrei să setezi B-PDF ca editorul tău PDF implicit?"
 notNow = "Nu acum"
 setDefault = "Setează ca implicită"
 title = "Setează ca aplicație PDF implicită"
@@ -2953,15 +2953,15 @@ message = "Nu s-a putut seta gestionarul PDF implicit"
 title = "Eroare"
 
 [defaultApp.prompt]
-message = "Fă din Stirling PDF aplicația implicită pentru deschiderea fișierelor PDF."
+message = "Fă din B-PDF aplicația implicită pentru deschiderea fișierelor PDF."
 title = "Setează ca editor PDF implicit"
 
 [defaultApp.settingsOpened]
-message = "Te rugăm să selectezi Stirling PDF în setările sistemului"
+message = "Te rugăm să selectezi B-PDF în setările sistemului"
 title = "Setări deschise"
 
 [defaultApp.success]
-message = "Stirling PDF este acum editorul tău PDF implicit"
+message = "B-PDF este acum editorul tău PDF implicit"
 title = "Aplicație implicită setată"
 
 [editTableOfContents]
@@ -3098,9 +3098,9 @@ visitsTooltip = "Vizite: {0} ({1}% din total)"
 
 [enterpriseEdition]
 button = "Faceți upgrade la Pro"
-ssoAdvert = "Căutați mai multe funcții de gestionare a utilizatorilor? Descoperiți Stirling PDF Pro"
+ssoAdvert = "Căutați mai multe funcții de gestionare a utilizatorilor? Descoperiți B-PDF Pro"
 warning = "Această funcție este disponibilă doar pentru utilizatorii Pro."
-yamlAdvert = "Stirling PDF Pro acceptă fișiere de configurare YAML și alte funcții SSO."
+yamlAdvert = "B-PDF Pro acceptă fișiere de configurare YAML și alte funcții SSO."
 
 [error]
 _value = "Eroare"
@@ -3477,7 +3477,7 @@ multimedia = "Multimedia"
 dismiss = "Închideți bannerul"
 message = "Creați un cont gratuit pentru a vă salva munca, a accesa mai multe funcții și a sprijini proiectul."
 signUp = "Înscriere gratuită"
-title = "Folosiți Stirling PDF ca invitat!"
+title = "Folosiți B-PDF ca invitat!"
 
 [home]
 alphabetical = "Alfabetic"
@@ -3651,7 +3651,7 @@ tags = "combina,uni,alătura"
 title = "Unifică"
 
 [home.mobile]
-brandAlt = "Logo Stirling PDF"
+brandAlt = "Logo B-PDF"
 openFiles = "Deschideți fișiere"
 swipeHint = "Glisați la stânga sau la dreapta pentru a schimba vizualizările"
 tools = "Instrumente"
@@ -3686,7 +3686,7 @@ tags = "organizează,rearanjează,reordonează"
 title = "Organizează"
 
 [home.pdfTextEditor]
-desc = "Revizuiește și editează exporturile JSON Stirling PDF cu editare de text grupată și regenerare PDF"
+desc = "Revizuiește și editează exporturile JSON B-PDF cu editare de text grupată și regenerare PDF"
 tags = "edit text,modify text,change text,edit content,update text,rewrite,correct,amend,redline,revise,text editor,content editor"
 title = "Editor text PDF"
 
@@ -3892,7 +3892,7 @@ passwordTooShort = "Parola trebuie să aibă cel puțin 6 caractere"
 signIn = "Autentificare"
 validating = "Se validează invitația..."
 validationError = "Validarea linkului de invitație a eșuat"
-welcome = "Bun venit la Stirling PDF"
+welcome = "Bun venit la B-PDF"
 welcomeSubtitle = "Finalizați configurarea contului pentru a începe"
 welcomeTitle = "Ați fost invitat!"
 
@@ -3982,7 +3982,7 @@ sendResetLink = "Trimiteți linkul de resetare"
 sessionExpired = "Sesiunea a expirat. Vă rugăm să vă autentificați din nou."
 signin = "Autentificare"
 signInAnonymously = "Autentificare ca invitat"
-subtitle = "Autentificați-vă din nou în Stirling PDF"
+subtitle = "Autentificați-vă din nou în B-PDF"
 signingIn = "Se autentifică..."
 signinTitle = "Te rugăm să te autentifici"
 signInWith = "Autentificați-vă cu"
@@ -4006,7 +4006,7 @@ subtitle = "Cu peste o duzină de instrumente pentru a redacta, semna, citi și 
 title = "Editați PDF-uri pentru a afișa/proteja informațiile dorite"
 
 [login.slides.overview]
-alt = "Prezentare generală Stirling PDF"
+alt = "Prezentare generală B-PDF"
 subtitle = "O suită cloud axată pe confidențialitate pentru PDF-uri, care vă permite să convertiți, semnați, redactați și gestionați documente, plus peste 50 de alte instrumente puternice."
 title = "Un centru unic pentru toate nevoile PDF."
 
@@ -4170,7 +4170,7 @@ message = "Autentificarea nu a reușit. Puteți închide această fereastră și
 title = "Autentificare eșuată"
 
 [oauth.success]
-message = "Puteți închide această fereastră și reveni la Stirling PDF."
+message = "Puteți închide această fereastră și reveni la B-PDF."
 title = "Autentificare reușită"
 
 [ocr]
@@ -4294,7 +4294,7 @@ runButton = "După ce instrumentul a fost configurat, acest buton vă permite s�
 selectControls = "<strong>Panoul din dreapta</strong> conține butoane pentru a selecta/deselecta rapid toate PDF-urile active, precum și butoane pentru a schimba tema sau limba aplicației."
 selectCropTool = "Să selectăm instrumentul <strong>Decupare</strong> pentru a demonstra cum se utilizează unul dintre instrumente."
 startTour = "Porniți turul"
-startTourDescription = "Faceți un tur ghidat al funcțiilor esențiale Stirling PDF"
+startTourDescription = "Faceți un tur ghidat al funcțiilor esențiale B-PDF"
 toolInterface = "Aceasta este interfața instrumentului <strong>Decupare</strong>. După cum vedeți, nu este prea mult acolo deoarece încă nu am adăugat fișiere PDF cu care să lucrăm."
 viewer = "<strong>Vizualizatorul</strong> vă permite să citiți și să adnotați PDF-urile."
 viewSwitcher = "Folosiți aceste controale pentru a selecta modul în care doriți să vizualizați PDF-urile."
@@ -4304,7 +4304,7 @@ wrapUp = "Totul este pregătit! Ați învățat despre zonele principale ale apl
 [onboarding.freeTrial]
 afterTrialWithoutPayment = "După încheierea perioadei de probă, veți continua cu nivelul gratuit. Adăugați o metodă de plată pentru a păstra accesul Pro."
 afterTrialWithPayment = "Abonamentul Pro va începe automat când se încheie perioada de probă."
-body = "Aveți acces complet la funcțiile Stirling PDF Pro în timpul perioadei de probă. Bucurați-vă de conversii nelimitate, dimensiuni de fișiere mai mari și procesare prioritară."
+body = "Aveți acces complet la funcțiile B-PDF Pro în timpul perioadei de probă. Bucurați-vă de conversii nelimitate, dimensiuni de fișiere mai mari și procesare prioritară."
 daysRemaining = "{{days}} zile rămase"
 daysRemainingSingular = "{{days}} zi rămasă"
 title = "Perioada de probă Pro de 30 de zile"
@@ -4343,7 +4343,7 @@ skip = "Sari peste deocamdată"
 upgrade = "Fă upgrade acum →"
 
 [onboarding.tourOverview]
-body = "Stirling PDF V2 vine cu zeci de instrumente și un layout reîmprospătat. Faceți un tur rapid pentru a vedea ce s-a schimbat și unde găsiți funcțiile de care aveți nevoie."
+body = "B-PDF V2 vine cu zeci de instrumente și un layout reîmprospătat. Faceți un tur rapid pentru a vedea ce s-a schimbat și unde găsiți funcțiile de care aveți nevoie."
 title = "Prezentarea turului"
 
 [onboarding.welcomeModal]
@@ -4352,10 +4352,10 @@ dontShowAgain = "Nu mai arăta"
 helpHint = "Puteți accesa oricând acest tur mai târziu din butonul <strong>Ajutor</strong> din stânga jos."
 maybeLater = "Poate mai târziu"
 startTour = "Porniți turul"
-title = "Bun venit la Stirling PDF!"
+title = "Bun venit la B-PDF!"
 
 [onboarding.welcomeSlide]
-body = "Stirling PDF este acum pregătit pentru echipe de orice dimensiune. Această actualizare include un nou aspect, capabilități puternice pentru admin și cea mai solicitată funcție - <strong>Edit Text</strong>."
+body = "B-PDF este acum pregătit pentru echipe de orice dimensiune. Această actualizare include un nou aspect, capabilități puternice pentru admin și cea mai solicitată funcție - <strong>Edit Text</strong>."
 title = "Bun venit la Stirling"
 
 [onboarding.whatsNew]
@@ -5250,7 +5250,7 @@ included = "Inclus"
 name = "Gratuit"
 
 [plan.licenseWarning]
-body = "Ai {{total}} utilizatori, dar nivelul gratuit suportă doar {{limit}} per server. Fă upgrade pentru ca Stirling PDF să ruleze fără probleme."
+body = "Ai {{total}} utilizatori, dar nivelul gratuit suportă doar {{limit}} per server. Fă upgrade pentru ca B-PDF să ruleze fără probleme."
 cta = "Vezi planuri"
 overLimit = "mai mult de {{limit}}"
 title = "Limită self-hosted gratuită atinsă"
@@ -6147,7 +6147,7 @@ autoUnzipFileLimitDescription = "Numărul maxim de fișiere de extras din ZIP"
 autoUnzipFileLimitTooltip = "Dezarhivați doar dacă ZIP-ul conține atâtea fișiere sau mai puține. Setați mai mare pentru a extrage ZIP-uri mai mari."
 autoUnzipTooltip = "Extrage automat fișierele ZIP returnate de operațiile API. Dezactivați pentru a păstra fișierele ZIP intacte. Aceasta nu afectează fluxurile de automatizare."
 defaultPdfEditor = "Editor PDF implicit"
-defaultPdfEditorActive = "Stirling PDF este editorul tău PDF implicit"
+defaultPdfEditorActive = "B-PDF este editorul tău PDF implicit"
 defaultPdfEditorChecking = "Se verifică..."
 defaultPdfEditorInactive = "O altă aplicație este setată ca implicită"
 defaultPdfEditorSet = "Deja implicit"
@@ -6278,14 +6278,14 @@ message = "Autentificați-vă pentru a debloca toate instrumentele."
 signIn = "Autentificare"
 
 [setup]
-description = "Începe alegând cum vrei să folosești Stirling PDF"
-welcome = "Bun venit la Stirling PDF"
+description = "Începe alegând cum vrei să folosești B-PDF"
+welcome = "Bun venit la B-PDF"
 
 [setup.login]
 connectingTo = "Conectare la:"
 hideInstructions = "Ascunde instrucțiunile"
 skipSignIn = "Continuați fără autentificare"
-instructions = "Pentru a activa autentificarea pe serverul dvs. Stirling PDF:"
+instructions = "Pentru a activa autentificarea pe serverul dvs. B-PDF:"
 instructionsEnvVar = "Setați variabila de mediu:"
 instructionsOrYml = "Sau în settings.yml:"
 instructionsRestart = "Apoi reporniți serverul pentru ca modificările să intre în vigoare."
@@ -6322,7 +6322,7 @@ description = "Autentifică-te cu contul tău Stirling"
 title = "Stirling Cloud"
 
 [setup.mode.selfhosted]
-description = "Conectează-te la propriul tău server Stirling PDF"
+description = "Conectează-te la propriul tău server B-PDF"
 title = "Server Self-Hosted"
 
 [setup.saas]
@@ -6363,11 +6363,11 @@ step3 = "Reporniți serverul"
 title = "Autentificarea nu este activată"
 
 [setup.server.type]
-saas = "Stirling PDF SaaS"
+saas = "B-PDF SaaS"
 selfhosted = "Server găzduit local"
 
 [setup.server.url]
-description = "Introdu URL-ul complet al serverului tău Stirling PDF găzduit local"
+description = "Introdu URL-ul complet al serverului tău B-PDF găzduit local"
 label = "URL server"
 
 [setup.step1]
@@ -6552,7 +6552,7 @@ passwordsDoNotMatch = "Parolele nu coincid"
 passwordTooShort = "Parola trebuie să aibă cel puțin 6 caractere"
 pleaseFillAllFields = "Vă rugăm să completați toate câmpurile"
 signUp = "Înregistrare"
-subtitle = "Alăturați-vă Stirling PDF pentru a începe"
+subtitle = "Alăturați-vă B-PDF pentru a începe"
 title = "Creați un cont"
 unexpectedError = "Eroare neașteptată: {{message}}"
 useEmailInstead = "Folosiți emailul în schimb"
@@ -6840,18 +6840,18 @@ please = "Te rugăm să iei în considerare completarea sondajului nostru!"
 title = "Sondaj Stirling-PDF"
 
 [survey.meeting]
-1 = "Dacă folosiți Stirling PDF la muncă, ne-ar plăcea să vorbim cu dvs. Oferim sesiuni de asistență tehnică în schimbul unei sesiuni de descoperire a utilizatorilor de 15 minute."
+1 = "Dacă folosiți B-PDF la muncă, ne-ar plăcea să vorbim cu dvs. Oferim sesiuni de asistență tehnică în schimbul unei sesiuni de descoperire a utilizatorilor de 15 minute."
 2 = "Este o ocazie să:"
 3 = "Obțineți ajutor pentru implementare, integrări sau depanare"
 4 = "Oferiți feedback direct despre performanță, cazuri limită și lipsuri de funcționalitate"
-5 = "Ajutați-ne să rafinăm Stirling PDF pentru utilizare reală în mediul enterprise"
+5 = "Ajutați-ne să rafinăm B-PDF pentru utilizare reală în mediul enterprise"
 6 = "Dacă sunteți interesat, vă puteți programa direct cu echipa noastră. (Numai în limba engleză)"
-7 = "Așteptăm cu interes să analizăm cazurile dvs. de utilizare și să facem Stirling PDF și mai bun!"
+7 = "Așteptăm cu interes să analizăm cazurile dvs. de utilizare și să facem B-PDF și mai bun!"
 button = "Programează întâlnire"
 notInterested = "Nu sunteți o companie și/sau nu sunteți interesat de o întâlnire?"
 
 [swagger]
-desc = "Vizualizați și testați endpoint-urile API Stirling PDF"
+desc = "Vizualizați și testați endpoint-urile API B-PDF"
 header = "Documentație API"
 tags = "api,documentație,swagger,endpoint-uri,dezvoltare"
 title = "Documentație API"
@@ -6884,7 +6884,7 @@ unfavorite = "Eliminați din favorite"
 [toolPanel.modePrompt]
 chooseFullscreen = "Utilizați modul ecran complet"
 chooseSidebar = "Utilizați modul bară laterală"
-description = "Previzualizați ambele layout-uri și decideți cum doriți să explorați instrumentele Stirling PDF."
+description = "Previzualizați ambele layout-uri și decideți cum doriți să explorați instrumentele B-PDF."
 dismiss = "Poate mai târziu"
 fullscreenDescription = "Răsfoiți fiecare instrument într-un catalog care acoperă spațiul de lucru până când alegeți unul."
 fullscreenTitle = "Mod ecran complet - (învechit)"
@@ -6984,7 +6984,7 @@ attentionBody = "Adminul tău trebuie să se conecteze pentru mai multe informa�
 attentionBodyAdmin = "Revizuiește cerințele de licențiere pentru a menține conformitatea acestui server."
 attentionTitle = "Acest server necesită atenția adminului"
 dismiss = "Ascunde bannerul"
-message = "Profită la maximum de Stirling PDF cu utilizatori nelimitați și funcții avansate"
+message = "Profită la maximum de B-PDF cu utilizatori nelimitați și funcții avansate"
 seeInfo = "Vezi info"
 title = "Upgrade la planul Server"
 upgradeButton = "Fă upgrade acum"
@@ -7106,7 +7106,7 @@ continued = "Continuare"
 downloads = "Descărcări"
 entryLabel = "Rezumat semnătură"
 filesEvaluated = "{{count}} fișiere evaluate"
-footer = "Validat prin Stirling PDF"
+footer = "Validat prin B-PDF"
 generatedAt = "Generat"
 noPdf = "Raportul PDF va fi disponibil după o validare reușită."
 page = "Pagină"

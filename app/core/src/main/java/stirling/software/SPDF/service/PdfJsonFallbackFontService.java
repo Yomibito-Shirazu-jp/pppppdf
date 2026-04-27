@@ -4,10 +4,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -80,6 +84,36 @@ public class PdfJsonFallbackFontService {
                     Map.entry("yahei", "fallback-noto-cjk"),
                     Map.entry("songti", "fallback-noto-cjk"),
                     Map.entry("heiti", "fallback-noto-cjk"),
+                    // Japanese commercial / system fonts (Morisawa, Microsoft, Apple, IPAex, etc.)
+                    Map.entry("udshingopro", "fallback-noto-jp"),
+                    Map.entry("udshingo", "fallback-noto-jp"),
+                    Map.entry("shingo", "fallback-noto-jp"),
+                    Map.entry("udmincho", "fallback-noto-jp"),
+                    Map.entry("udmgothic", "fallback-noto-jp"),
+                    Map.entry("msmincho", "fallback-noto-jp"),
+                    Map.entry("msgothic", "fallback-noto-jp"),
+                    Map.entry("mspmincho", "fallback-noto-jp"),
+                    Map.entry("mspgothic", "fallback-noto-jp"),
+                    Map.entry("yumincho", "fallback-noto-jp"),
+                    Map.entry("yugothic", "fallback-noto-jp"),
+                    Map.entry("hiraginosans", "fallback-noto-jp"),
+                    Map.entry("hiraginomincho", "fallback-noto-jp"),
+                    Map.entry("hiraginokakugothic", "fallback-noto-jp"),
+                    Map.entry("hiraginomarugothic", "fallback-noto-jp"),
+                    Map.entry("hiragino", "fallback-noto-jp"),
+                    Map.entry("meiryo", "fallback-noto-jp"),
+                    Map.entry("ipaexgothic", "fallback-noto-jp"),
+                    Map.entry("ipaexmincho", "fallback-noto-jp"),
+                    Map.entry("ipagothic", "fallback-noto-jp"),
+                    Map.entry("ipamincho", "fallback-noto-jp"),
+                    Map.entry("ipa", "fallback-noto-jp"),
+                    Map.entry("kozgopro", "fallback-noto-jp"),
+                    Map.entry("kozminpro", "fallback-noto-jp"),
+                    Map.entry("kozuka", "fallback-noto-jp"),
+                    Map.entry("ryumin", "fallback-noto-jp"),
+                    Map.entry("midashi", "fallback-noto-jp"),
+                    Map.entry("mincho", "fallback-noto-jp"),
+                    Map.entry("gothic", "fallback-noto-jp"),
                     // Noto Sans - Google's universal font (use as last resort generic fallback)
                     Map.entry("noto", "fallback-noto-sans"),
                     Map.entry("notosans", "fallback-noto-sans"));
@@ -323,9 +357,16 @@ public class PdfJsonFallbackFontService {
     @Value("${stirling.pdf.fallback-font:" + DEFAULT_FALLBACK_FONT_LOCATION + "}")
     private String legacyFallbackFontLocation;
 
+    @Value("${stirling.pdf.customFontsDir:/customFiles/fonts}")
+    private String customFontsDir;
+
     private String fallbackFontLocation;
 
     private final Map<String, byte[]> fallbackFontCache = new ConcurrentHashMap<>();
+
+    // User-provided fonts loaded at startup from customFontsDir
+    private final Map<String, FallbackFontSpec> customFallbackFonts = new ConcurrentHashMap<>();
+    private final Map<String, String> customFontAliases = new ConcurrentHashMap<>();
 
     @jakarta.annotation.PostConstruct
     private void loadConfig() {
@@ -339,6 +380,68 @@ public class PdfJsonFallbackFontService {
             fallbackFontLocation = legacyFallbackFontLocation;
         }
         log.info("Using fallback font location: {}", fallbackFontLocation);
+        scanCustomFonts();
+    }
+
+    private void scanCustomFonts() {
+        if (customFontsDir == null || customFontsDir.isBlank()) {
+            return;
+        }
+        Path dir = Paths.get(customFontsDir);
+        if (!Files.isDirectory(dir)) {
+            log.info("Custom fonts directory not present: {}", dir);
+            return;
+        }
+        try (Stream<Path> stream = Files.list(dir)) {
+            stream.filter(Files::isRegularFile)
+                    .forEach(this::registerCustomFont);
+        } catch (IOException e) {
+            log.warn("Failed to scan custom fonts directory {}: {}", dir, e.getMessage());
+        }
+        log.info(
+                "Loaded {} custom font(s) from {} (aliases: {})",
+                customFallbackFonts.size(),
+                dir,
+                customFontAliases.keySet());
+    }
+
+    // Foundry prefixes to strip when computing custom font aliases
+    private static final java.util.List<String> FOUNDRY_PREFIXES =
+            java.util.List.of(
+                    "ap-otf-", "a-otf-", "ap-sk-", "u-otf-", "fot-", "ot-", "otf-");
+
+    private void registerCustomFont(Path file) {
+        String fileName = file.getFileName().toString();
+        int dot = fileName.lastIndexOf('.');
+        if (dot <= 0) {
+            return;
+        }
+        String ext = fileName.substring(dot + 1).toLowerCase(Locale.ROOT);
+        if (!ext.equals("ttf") && !ext.equals("otf")) {
+            return;
+        }
+        String baseName = fileName.substring(0, dot);
+        String fallbackId = "custom-" + baseName.toLowerCase(Locale.ROOT);
+        String resourceLocation = file.toUri().toString();
+        customFallbackFonts.put(fallbackId, new FallbackFontSpec(resourceLocation, baseName, ext));
+
+        // Compute family alias: strip foundry prefix, then take first segment
+        String normalized =
+                WHITESPACE_PATTERN
+                        .matcher(baseName.toLowerCase(Locale.ROOT))
+                        .replaceAll("");
+        for (String prefix : FOUNDRY_PREFIXES) {
+            if (normalized.startsWith(prefix)) {
+                normalized = normalized.substring(prefix.length());
+                break;
+            }
+        }
+        String aliasKey = FONT_NAME_DELIMITER_PATTERN.split(normalized)[0];
+        if (!aliasKey.isEmpty()) {
+            // Don't overwrite existing aliases (first font wins for a given family name)
+            customFontAliases.putIfAbsent(aliasKey, fallbackId);
+        }
+        log.debug("Registered custom font: id={} alias={} path={}", fallbackId, aliasKey, file);
     }
 
     public PdfJsonFont buildFallbackFontModel() throws IOException {
@@ -437,7 +540,11 @@ public class PdfJsonFallbackFontService {
             // Handles: "Arimo_700wght" -> "arimo", "Arial-Bold" -> "arial", "Arial,Bold" -> "arial"
             String baseName = FONT_NAME_DELIMITER_PATTERN.split(normalized)[0];
 
-            String aliasedFontId = FONT_NAME_ALIASES.get(baseName);
+            // Check user-provided custom fonts first (so they can override built-ins)
+            String aliasedFontId = customFontAliases.get(baseName);
+            if (aliasedFontId == null) {
+                aliasedFontId = FONT_NAME_ALIASES.get(baseName);
+            }
             if (aliasedFontId != null) {
                 // Detect weight and style from the normalized font name
                 boolean isBold = detectBold(normalized);
@@ -610,6 +717,10 @@ public class PdfJsonFallbackFontService {
             String baseName = inferBaseName(fallbackFontLocation, "NotoSans-Regular");
             String format = inferFormat(fallbackFontLocation, "ttf");
             return new FallbackFontSpec(fallbackFontLocation, baseName, format);
+        }
+        FallbackFontSpec custom = customFallbackFonts.get(fallbackId);
+        if (custom != null) {
+            return custom;
         }
         return BUILT_IN_FALLBACK_FONTS.get(fallbackId);
     }

@@ -162,14 +162,6 @@ export const useConfigNavSections = (
       title: t('settings.licensingAnalytics.title', 'Licensing & Analytics'),
       items: [
         {
-          key: 'adminPlan',
-          label: t('settings.licensingAnalytics.plan', 'Plan'),
-          icon: 'star-rounded',
-          component: <AdminPlanSection />,
-          disabled: requiresLogin,
-          disabledTooltip: requiresLogin ? enableLoginTooltip : undefined
-        },
-        {
           key: 'adminAudit',
           label: t('settings.licensingAnalytics.audit', 'Audit'),
           icon: 'fact-check-rounded',
@@ -366,14 +358,6 @@ export const createConfigNavSections = (
     sections.push({
       title: 'Licensing & Analytics',
       items: [
-        {
-          key: 'adminPlan',
-          label: 'Plan',
-          icon: 'star-rounded',
-          component: <AdminPlanSection />,
-          disabled: requiresLogin,
-          disabledTooltip: requiresLogin ? 'Enable login mode first' : undefined
-        },
         {
           key: 'adminAudit',
           label: 'Audit',

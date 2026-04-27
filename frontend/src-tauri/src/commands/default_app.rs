@@ -1,6 +1,6 @@
 use crate::utils::add_log;
 
-/// Check if Stirling PDF is the default PDF handler
+/// Check if B-PDF is the default PDF handler
 #[tauri::command]
 pub fn is_default_pdf_handler() -> Result<bool, String> {
     add_log("🔍 Checking if app is default PDF handler".to_string());
@@ -21,7 +21,7 @@ pub fn is_default_pdf_handler() -> Result<bool, String> {
     }
 }
 
-/// Attempt to set/prompt for Stirling PDF as default PDF handler
+/// Attempt to set/prompt for B-PDF as default PDF handler
 #[tauri::command]
 pub fn set_as_default_pdf_handler() -> Result<String, String> {
     add_log("⚙️ Attempting to set as default PDF handler".to_string());

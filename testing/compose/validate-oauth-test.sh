@@ -36,12 +36,12 @@ else
     exit 1
 fi
 
-# Check Stirling PDF
-echo -n "Checking Stirling PDF status... "
+# Check B-PDF
+echo -n "Checking B-PDF status... "
 if curl -sf http://localhost:8080/api/v1/info/status 2>/dev/null | grep -q "UP"; then
     echo -e "${GREEN}✓${NC}"
 else
-    echo -e "${RED}✗ Stirling PDF is not ready${NC}"
+    echo -e "${RED}✗ B-PDF is not ready${NC}"
     exit 1
 fi
 

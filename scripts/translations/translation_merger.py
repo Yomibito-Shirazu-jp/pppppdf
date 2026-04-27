@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Translation Merger for Stirling PDF Frontend
+Translation Merger for B-PDF Frontend
 Merges missing translations from en-GB into target language files.
 Useful for AI-assisted translation workflows.
 TOML format only.

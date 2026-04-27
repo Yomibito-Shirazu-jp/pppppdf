@@ -1,5 +1,5 @@
 #!/bin/bash
-# This script initializes Stirling PDF without OCR features.
+# This script initializes B-PDF without OCR features.
 set -euo pipefail
 
 log() {
@@ -794,7 +794,7 @@ case "${JAVA_TOOL_OPTIONS}" in
   *) export JAVA_TOOL_OPTIONS="-Djava.awt.headless=true ${JAVA_TOOL_OPTIONS}" ;;
 esac
 log "running with JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}"
-log "Running Stirling PDF with DISABLE_ADDITIONAL_FEATURES=${DISABLE_ADDITIONAL_FEATURES:-} and VERSION_TAG=${VERSION_TAG:-<unset>}"
+log "Running B-PDF with DISABLE_ADDITIONAL_FEATURES=${DISABLE_ADDITIONAL_FEATURES:-} and VERSION_TAG=${VERSION_TAG:-<unset>}"
 
 # ---------- UMASK ----------
 # Set default permissions mask.
@@ -893,8 +893,8 @@ else
 fi
 
 # ---------- Java ----------
-# Start Stirling PDF Java application immediately (parallel with unoserver startup).
-log "Starting Stirling PDF"
+# Start B-PDF Java application immediately (parallel with unoserver startup).
+log "Starting B-PDF"
 JAVA_CMD=(
   java
   -Dfile.encoding=UTF-8
@@ -1022,10 +1022,10 @@ fi
 wait "$JAVA_PID" || true
 exit_code=$?
 case "$exit_code" in
-  0)   log "Stirling PDF exited normally." ;;
-  137) log "Stirling PDF was OOM-killed (exit 137). Check container memory limits." ;;
-  143) log "Stirling PDF terminated by SIGTERM (normal orchestrator shutdown)." ;;
-  *)   log "Stirling PDF exited with code ${exit_code}." ;;
+  0)   log "B-PDF exited normally." ;;
+  137) log "B-PDF was OOM-killed (exit 137). Check container memory limits." ;;
+  143) log "B-PDF terminated by SIGTERM (normal orchestrator shutdown)." ;;
+  *)   log "B-PDF exited with code ${exit_code}." ;;
 esac
 # Propagate exit code so orchestrators can detect crashes vs clean shutdowns
 exit "${exit_code}"
