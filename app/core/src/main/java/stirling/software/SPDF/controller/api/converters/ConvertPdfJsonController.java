@@ -161,7 +161,26 @@ public class ConvertPdfJsonController {
         // Validate job ownership
         validateJobAccess(jobId);
 
-        byte[] pdfBytes = pdfJsonConversionService.exportUpdatedPages(jobId, document);
+        byte[] pdfBytes;
+        try {
+            pdfBytes = pdfJsonConversionService.exportUpdatedPages(jobId, document);
+        } catch (stirling.software.SPDF.exception.CacheUnavailableException e) {
+            // Bubble up — handler maps to 410 with action=reupload (frontend auto-recovers).
+            throw e;
+        } catch (Exception e) {
+            // Any other failure during incremental export (font issues, malformed page model,
+            // PDFBox quirks, etc.) is recoverable on the client side by re-uploading the source
+            // PDF and retrying. We surface it to the frontend as a 410/cache_unavailable so the
+            // existing automatic recovery flow kicks in instead of showing a raw 500 to users.
+            log.warn(
+                    "Incremental export failed for jobId {} — converting to cache_unavailable so client auto-recovers",
+                    jobId,
+                    e);
+            throw new stirling.software.SPDF.exception.CacheUnavailableException(
+                    "Incremental export failed; please re-upload the document. (jobId="
+                            + jobId
+                            + ")");
+        }
 
         String baseName =
                 (filename != null && !filename.isBlank())

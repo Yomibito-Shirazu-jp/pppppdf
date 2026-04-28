@@ -1164,9 +1164,28 @@ const PdfTextEditor = ({ onComplete, onError }: BaseToolProps) => {
           return;
         } catch (incrementalError) {
           if (isLazyMode && cachedJobIdRef.current) {
-            throw new Error('Incremental export failed for cached document. Please reload and retry.', {
-              cause: incrementalError,
-            });
+            // Cache expired (e.g. server restart) — auto-reload the source file silently
+            // so the user can retry without seeing a scary error.
+            if (isCacheUnavailableError(incrementalError)) {
+              console.log('[handleGeneratePdf] Cache expired, auto-recovering...');
+              const recovered = await recoverCacheAndReloadRef.current();
+              if (recovered) {
+                throw new Error(
+                  t(
+                    'pdfTextEditor.errors.sessionRefreshed',
+                    'セッションが更新されました。もう一度「保存」を押してください。',
+                  ) as string,
+                  { cause: incrementalError },
+                );
+              }
+            }
+            throw new Error(
+              t(
+                'pdfTextEditor.errors.sessionExpired',
+                'セッションの有効期限が切れました。ファイルを再読み込みしてやり直してください。',
+              ) as string,
+              { cause: incrementalError },
+            );
           }
           console.warn(
             '[handleGeneratePdf] Incremental export failed, falling back to full export',
@@ -1342,9 +1361,28 @@ const PdfTextEditor = ({ onComplete, onError }: BaseToolProps) => {
           pdfBlob = response.data;
         } catch (incrementalError) {
           if (isLazyMode && cachedJobId) {
-            throw new Error('Incremental export failed for cached document. Please reload and retry.', {
-              cause: incrementalError,
-            });
+            // Cache expired (e.g. server restart) — auto-reload the source file silently
+            // so the user can retry without seeing a scary error.
+            if (isCacheUnavailableError(incrementalError)) {
+              console.log('[handleSaveToWorkbench] Cache expired, auto-recovering...');
+              const recovered = await recoverCacheAndReloadRef.current();
+              if (recovered) {
+                throw new Error(
+                  t(
+                    'pdfTextEditor.errors.sessionRefreshed',
+                    'セッションが更新されました。もう一度「保存」を押してください。',
+                  ) as string,
+                  { cause: incrementalError },
+                );
+              }
+            }
+            throw new Error(
+              t(
+                'pdfTextEditor.errors.sessionExpired',
+                'セッションの有効期限が切れました。ファイルを再読み込みしてやり直してください。',
+              ) as string,
+              { cause: incrementalError },
+            );
           }
           console.warn(
             '[handleSaveToWorkbench] Incremental export failed, falling back to full export',
