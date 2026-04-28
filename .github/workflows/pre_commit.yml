@@ -12,6 +12,8 @@ permissions:
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
+    # Skip on forks where the GitHub App secrets aren't configured
+    if: github.repository == 'Stirling-Tools/Stirling-PDF'
     env:
       # Prevents sdist builds → no tar extraction
       PIP_ONLY_BINARY: ":all:"
