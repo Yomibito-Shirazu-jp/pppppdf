@@ -62,17 +62,27 @@ public class FacilisDbService {
         rebuildIndex();
     }
 
+    /** Result summary of a {@link #importDbZip(byte[])} call. */
+    public record ImportResult(
+            int indexedLayouts,
+            int totalFilesExtracted,
+            int parseFailures,
+            Map<String, Integer> extensionCounts) {}
+
     /**
-     * Replace the imported DB with the contents of {@code zipBytes}. Returns the number of
-     * .lay layouts indexed afterward.
+     * Replace the imported DB with the contents of {@code zipBytes}. Returns rich diagnostics so
+     * the caller can explain to the user when 0 .lay layouts were found (e.g. wrong DB subset
+     * uploaded — only .tm1/.tm2/.dai files inside).
      */
-    public synchronized int importDbZip(byte[] zipBytes) throws IOException {
+    public synchronized ImportResult importDbZip(byte[] zipBytes) throws IOException {
         // Wipe existing tree before extracting so stale templates don't linger after re-upload.
         if (Files.isDirectory(rootDir)) {
             deleteRecursively(rootDir);
         }
         Files.createDirectories(rootDir);
 
+        int totalFiles = 0;
+        Map<String, Integer> extCounts = new java.util.TreeMap<>();
         try (ZipInputStream zis =
                 ZipSecurity.createHardenedInputStream(new ByteArrayInputStream(zipBytes))) {
             ZipEntry entry;
@@ -110,11 +120,29 @@ public class FacilisDbService {
                 try (InputStream entryStream = nonClosingStream(zis)) {
                     Files.copy(entryStream, target, StandardCopyOption.REPLACE_EXISTING);
                 }
+                totalFiles++;
+                int dot = fileName.lastIndexOf('.');
+                String ext =
+                        (dot > 0 && dot < fileName.length() - 1)
+                                ? fileName.substring(dot + 1).toLowerCase(Locale.ROOT)
+                                : "(none)";
+                extCounts.merge(ext, 1, Integer::sum);
             }
         }
 
+        int candidateLayCount;
+        try (Stream<Path> stream = Files.walk(rootDir)) {
+            candidateLayCount = (int)
+                    stream.filter(Files::isRegularFile)
+                            .filter(p -> p.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(LAYOUT_EXT))
+                            .count();
+        } catch (IOException e) {
+            candidateLayCount = 0;
+        }
         rebuildIndex();
-        return layoutsById.size();
+        int indexed = layoutsById.size();
+        int parseFailures = Math.max(0, candidateLayCount - indexed);
+        return new ImportResult(indexed, totalFiles, parseFailures, extCounts);
     }
 
     /** Returns true when at least one .lay has been indexed. */

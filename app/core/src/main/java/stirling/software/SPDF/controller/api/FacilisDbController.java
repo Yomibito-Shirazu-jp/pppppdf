@@ -53,12 +53,53 @@ public class FacilisDbController {
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "File must be a .zip"));
         }
-        int count = dbService.importDbZip(file.getBytes());
-        log.info("FACILIS DB imported from {} ({} bytes) — {} layouts", name, file.getSize(), count);
+        FacilisDbService.ImportResult result = dbService.importDbZip(file.getBytes());
+        log.info(
+                "FACILIS DB imported from {} ({} bytes) — {} .lay layouts indexed (extracted {} files, ext counts: {}, parse failures: {})",
+                name,
+                file.getSize(),
+                result.indexedLayouts(),
+                result.totalFilesExtracted(),
+                result.extensionCounts(),
+                result.parseFailures());
+
+        if (result.indexedLayouts() == 0) {
+            // Build a friendly diagnostic explaining what was uploaded vs. what's expected.
+            StringBuilder breakdown = new StringBuilder();
+            result.extensionCounts()
+                    .forEach((ext, n) -> breakdown.append(".").append(ext).append("=").append(n).append(" "));
+            String message;
+            if (result.totalFilesExtracted() == 0) {
+                message = "Zip is empty after extraction.";
+            } else if (result.parseFailures() > 0) {
+                message =
+                        "Found "
+                                + result.parseFailures()
+                                + " .lay file(s), but none could be parsed. Are they current FACILIS Supremo layouts?";
+            } else {
+                message =
+                        "No .lay (SignatureLayout) files found in the zip. Extracted "
+                                + result.totalFilesExtracted()
+                                + " file(s): "
+                                + breakdown.toString().trim()
+                                + ". Re-export the FACILIS DB including the Layout/SignatureLayout/ folder.";
+            }
+            return ResponseEntity.badRequest()
+                    .body(
+                            Map.of(
+                                    "error", "no_layouts",
+                                    "message", message,
+                                    "indexedLayouts", 0,
+                                    "totalFilesExtracted", result.totalFilesExtracted(),
+                                    "parseFailures", result.parseFailures(),
+                                    "extensionCounts", result.extensionCounts()));
+        }
+
         return ResponseEntity.ok(
                 Map.of(
                         "status", "ok",
-                        "indexedLayouts", count));
+                        "indexedLayouts", result.indexedLayouts(),
+                        "totalFilesExtracted", result.totalFilesExtracted()));
     }
 
     @GetMapping("/facilis-db/layouts")

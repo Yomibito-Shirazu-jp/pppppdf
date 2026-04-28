@@ -81,11 +81,24 @@ const BookletImpositionSettings = ({ parameters, onParameterChange, disabled = f
           );
         }
       } catch (err: any) {
-        setUploadError(
-          err?.response?.data?.error ??
-            err?.message ??
-            (t("bookletImposition.facilis.uploadFailed", "Upload failed") as string),
-        );
+        // 400 with structured no_layouts payload — show the server's diagnostic message.
+        const data = err?.response?.data;
+        if (data && typeof data === "object" && data.error === "no_layouts") {
+          const extCounts = data.extensionCounts as Record<string, number> | undefined;
+          const breakdown = extCounts
+            ? Object.entries(extCounts).map(([ext, n]) => `.${ext}×${n}`).join(", ")
+            : "";
+          setUploadError(
+            `${data.message ?? ""}${breakdown ? ` (内訳: ${breakdown})` : ""}`.trim(),
+          );
+        } else {
+          setUploadError(
+            data?.message ??
+              data?.error ??
+              err?.message ??
+              (t("bookletImposition.facilis.uploadFailed", "Upload failed") as string),
+          );
+        }
       } finally {
         setUploading(false);
         fileResetRef.current?.();
