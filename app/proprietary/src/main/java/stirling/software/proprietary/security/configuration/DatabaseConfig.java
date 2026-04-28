@@ -74,7 +74,10 @@ public class DatabaseConfig {
     public DataSource dataSource() throws UnsupportedProviderException {
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
 
-        if (!runningProOrHigher || !datasource.isEnableCustomDatabase()) {
+        // Internal-deployment override: ee5567e17 already opens up the Pro security/login/enterprise
+        // surface for this fork. Apply the same policy here so custom Postgres works without a paid
+        // licence — gating on enableCustomDatabase only.
+        if (!datasource.isEnableCustomDatabase()) {
             return useDefaultDataSource(dataSourceBuilder);
         }
 
