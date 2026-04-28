@@ -23,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 
 import stirling.software.SPDF.model.api.general.BookletImpositionRequest;
+import stirling.software.SPDF.service.facilis.FacilisDbService;
+import stirling.software.SPDF.service.facilis.FacilisLayoutExecutor;
 import stirling.software.common.service.CustomPDFDocumentFactory;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +32,8 @@ class BookletImpositionControllerTest {
 
     @TempDir Path tempDir;
     @Mock private CustomPDFDocumentFactory pdfDocumentFactory;
+    @Mock private FacilisDbService facilisDbService;
+    @Mock private FacilisLayoutExecutor facilisLayoutExecutor;
     @InjectMocks private BookletImpositionController controller;
 
     private MockMultipartFile createRealPdf(int numPages) throws IOException {
@@ -71,14 +75,27 @@ class BookletImpositionControllerTest {
     }
 
     @Test
-    void createBookletImposition_invalidPagesPerSheet() throws IOException {
+    void createBookletImposition_pagesPerSheetGreaterThanTwoRequiresTemplate() throws IOException {
         MockMultipartFile file = createRealPdf(4);
         BookletImpositionRequest request = createRequest(file);
         request.setPagesPerSheet(4);
 
+        // 4/8/16/32-up needs a FACILIS .lay templateId since signature folding patterns are
+        // template-driven, not algorithmic.
         assertThatThrownBy(() -> controller.createBookletImposition(request))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("2 pages per side");
+                .hasMessageContaining("templateId");
+    }
+
+    @Test
+    void createBookletImposition_unsupportedPagesPerSheetRejected() throws IOException {
+        MockMultipartFile file = createRealPdf(4);
+        BookletImpositionRequest request = createRequest(file);
+        request.setPagesPerSheet(3);
+
+        assertThatThrownBy(() -> controller.createBookletImposition(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("2, 4, 8, 16, 32");
     }
 
     @Test
