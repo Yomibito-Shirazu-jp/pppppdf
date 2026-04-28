@@ -244,7 +244,7 @@ storage:
   enabled: false # set to 'true' to allow users to store files on the server (requires security.enableLogin) [ALPHA]
   provider: local # storage provider: 'local' for filesystem storage, 'database' for DB-backed storage
   local:
-    basePath: './storage' # base directory for stored files
+    basePath: '/configs/storage' # base directory for stored files. Defaults to /configs/storage so files persist with the configs volume — './storage' would live inside the container and be wiped on every redeploy.
   quotas:
     maxStorageMbPerUser: -1 # Max storage per user in MB; -1 disables per-user cap
     maxStorageMbTotal: -1 # Max storage across all users in MB; -1 disables total cap
