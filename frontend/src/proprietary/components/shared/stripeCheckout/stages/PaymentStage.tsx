@@ -4,10 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { loadStripe } from '@stripe/stripe-js';
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js';
 import { PlanTier } from '@app/services/licenseService';
+import { isSecureContext } from '@app/utils/protocolDetection';
 
-// Load Stripe once
+// Load Stripe once. Live keys throw IntegrationError over HTTP, so skip the load
+// entirely on insecure origins — hosted checkout will be used instead.
 const STRIPE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
-const stripePromise = STRIPE_KEY ? loadStripe(STRIPE_KEY) : null;
+const stripePromise = STRIPE_KEY && isSecureContext() ? loadStripe(STRIPE_KEY) : null;
 
 interface PaymentStageProps {
   clientSecret: string | null;

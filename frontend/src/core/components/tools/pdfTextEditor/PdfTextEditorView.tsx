@@ -964,6 +964,53 @@ const PdfTextEditorView = ({ data }: PdfTextEditorViewProps) => {
     [editingGroupId, pageGroups],
   );
 
+  // Progressive rendering: cap how many text groups React mounts per commit so a
+  // dense page (thousands of groups) doesn't freeze the main thread on first
+  // paint. The budget grows on each idle frame until it covers the whole page.
+  // Chosen empirically — large enough that "small" pages render in one shot.
+  const INITIAL_RENDER_BUDGET = 80;
+  const RENDER_CHUNK_SIZE = 80;
+  const [renderBudget, setRenderBudget] = useState(INITIAL_RENDER_BUDGET);
+
+  useEffect(() => {
+    setRenderBudget(INITIAL_RENDER_BUDGET);
+  }, [selectedPage, visibleGroups.length]);
+
+  useEffect(() => {
+    if (renderBudget >= visibleGroups.length) {
+      return;
+    }
+    const grow = () =>
+      setRenderBudget((current) =>
+        Math.min(current + RENDER_CHUNK_SIZE, visibleGroups.length),
+      );
+    const ric = (window as unknown as {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    }).requestIdleCallback;
+    let handle: number;
+    if (typeof ric === 'function') {
+      handle = ric(grow, { timeout: 200 });
+      return () => {
+        const cic = (window as unknown as {
+          cancelIdleCallback?: (handle: number) => void;
+        }).cancelIdleCallback;
+        if (typeof cic === 'function') cic(handle);
+      };
+    }
+    handle = window.setTimeout(grow, 50);
+    return () => window.clearTimeout(handle);
+  }, [renderBudget, visibleGroups.length]);
+
+  const renderableGroups = useMemo(
+    () =>
+      renderBudget >= visibleGroups.length
+        ? visibleGroups
+        : visibleGroups.slice(0, renderBudget),
+    [visibleGroups, renderBudget],
+  );
+  const isProgressivelyRendering = renderBudget < visibleGroups.length;
+
 const orderedImages = useMemo(
   () =>
     [...pageImages].sort(
@@ -1030,8 +1077,10 @@ const selectionToolbarPosition = useMemo(() => {
       return;
     }
 
-    // Create a stable key for this measurement configuration
-    const currentKey = `${selectedPage}-${fontFamilies.size}-${autoScaleText}`;
+    // Create a stable key for this measurement configuration. Includes the
+    // current render budget so progressively-rendered groups get measured as
+    // they mount, not just the initial chunk.
+    const currentKey = `${selectedPage}-${fontFamilies.size}-${autoScaleText}-${renderBudget}`;
 
     // Skip if we've already measured for this configuration
     if (measurementKeyRef.current === currentKey) {
@@ -1112,6 +1161,7 @@ const selectionToolbarPosition = useMemo(() => {
     selectedPage,
     isParagraphLayout,
     resolveGroupWidth,
+    renderBudget,
   ]);
 
   useLayoutEffect(() => {
@@ -2020,6 +2070,32 @@ const selectionToolbarPosition = useMemo(() => {
                       </Rnd>
                     );
                   })}
+                  {isProgressivelyRendering && (
+                    <Box
+                      style={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        zIndex: 3_000_000,
+                        background: 'rgba(15, 23, 42, 0.78)',
+                        color: '#fff',
+                        padding: '4px 10px',
+                        borderRadius: 999,
+                        fontSize: 12,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        pointerEvents: 'none',
+                      }}
+                    >
+                      <AutorenewIcon sx={{ fontSize: 14 }} className="animate-spin" />
+                      {t(
+                        'pdfTextEditor.progressiveRender',
+                        'Rendering {{rendered}} / {{total}}…',
+                        { rendered: renderBudget, total: visibleGroups.length },
+                      )}
+                    </Box>
+                  )}
                   {visibleGroups.length === 0 && orderedImages.length === 0 ? (
                     <Group justify="center" align="center" style={{ height: '100%' }}>
                       <Stack gap={4} align="center">
@@ -2029,7 +2105,7 @@ const selectionToolbarPosition = useMemo(() => {
                       </Stack>
                     </Group>
                   ) : (
-                    visibleGroups.map(({ group, pageGroupIndex }) => {
+                    renderableGroups.map(({ group, pageGroupIndex }) => {
                       const bounds = toCssBounds(currentPage, pageHeight, scale, group.bounds);
                       const changed = group.text !== group.originalText;
                       const isActive = activeGroupId === group.id || editingGroupId === group.id;
