@@ -257,7 +257,12 @@ public class JobExecutorService {
                 // Check if this is a typed exception that should be handled by
                 // GlobalExceptionHandler (either directly or wrapped)
                 Throwable cause = e.getCause();
+                String exceptionClassName = e.getClass().getName();
+                boolean isCacheUnavailable =
+                        "stirling.software.SPDF.exception.CacheUnavailableException"
+                                .equals(exceptionClassName);
                 if (e instanceof IllegalArgumentException
+                        || isCacheUnavailable
                         || cause
                                 instanceof
                                 stirling.software.common.util.ExceptionUtils.BaseAppException
@@ -265,7 +270,8 @@ public class JobExecutorService {
                                 instanceof
                                 stirling.software.common.util.ExceptionUtils
                                         .BaseValidationException) {
-                    // Rethrow so GlobalExceptionHandler can handle with proper HTTP status codes
+                    // Rethrow so GlobalExceptionHandler / per-controller handlers can return
+                    // the right HTTP status (e.g. 410 Gone for CacheUnavailableException).
                     throw e;
                 }
                 // Handle other RuntimeExceptions as generic errors
