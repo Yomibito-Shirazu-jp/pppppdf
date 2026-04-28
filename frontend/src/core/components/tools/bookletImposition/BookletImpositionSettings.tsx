@@ -365,6 +365,25 @@ const BookletImpositionSettings = ({ parameters, onParameterChange, disabled = f
               size="sm"
             />
 
+            {/* Warn when 8-up+ is selected without a FACILIS template — the backend
+                rejects it because folding patterns are template-driven, not algorithmic. */}
+            {parameters.pagesPerSheet > 2 && !usingTemplate && (
+              <Alert color="yellow" variant="light" mt="xs">
+                <Text size="xs" fw={600}>
+                  {t(
+                    'bookletImposition.pagesPerSheet.facilisRequired.title',
+                    '⚠ 4-up 以上は FACILIS テンプレが必須です',
+                  )}
+                </Text>
+                <Text size="xs" mt={4}>
+                  {t(
+                    'bookletImposition.pagesPerSheet.facilisRequired.body',
+                    '無線・アジロの折り順はテンプレート駆動のため、Advanced Options ▼ から DB.zip をアップロードしてテンプレを選んでください。または「2-up (中綴じ)」に戻すと即実行できます。',
+                  )}
+                </Text>
+              </Alert>
+            )}
+
             <Divider label={t('bookletImposition.section.bleed', 'ドブ (Bleed)')} labelPosition="center" />
 
             {/* 4辺独立ドブ */}

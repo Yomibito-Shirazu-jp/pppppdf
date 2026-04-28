@@ -30,8 +30,34 @@ export const bookletImpositionOperationConfig = {
 export const useBookletImpositionOperation = () => {
   const { t } = useTranslation();
 
+  const standardHandler = createStandardErrorHandler(
+    t('bookletImposition.error.failed', '小冊子の面付け中にエラーが発生しました。'),
+  );
+
   return useToolOperation<BookletImpositionParameters>({
     ...bookletImpositionOperationConfig,
-    getErrorMessage: createStandardErrorHandler(t('bookletImposition.error.failed', 'An error occurred while creating the booklet imposition.'))
+    getErrorMessage: (error: any) => {
+      // ProblemDetail body (Spring 400) — extract `detail` and translate known business errors.
+      let serverDetail: string | undefined;
+      const data = error?.response?.data;
+      if (data && typeof data === 'object' && typeof data.detail === 'string') {
+        serverDetail = data.detail;
+      } else if (typeof data === 'string') {
+        serverDetail = data;
+      }
+
+      if (serverDetail && /pagesPerSheet\s*>\s*2\s*requires\s*a\s*FACILIS/i.test(serverDetail)) {
+        return t(
+          'bookletImposition.error.facilisRequired',
+          '4-up 以上の面付けには FACILIS テンプレートが必要です。Advanced Options から DB.zip をアップロードしてテンプレを選ぶか、「2-up (中綴じ)」を選んでください。',
+        ) as string;
+      }
+
+      if (serverDetail) {
+        return serverDetail;
+      }
+
+      return standardHandler(error);
+    },
   });
 };
