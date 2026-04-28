@@ -60,7 +60,18 @@ public final class FacilisLayoutParser {
             throw new IOException("Failed to parse FACILIS layout: " + relativeId, e);
         }
 
+        // FACILIS v4.0 Supremo wraps the layout deeply:
+        //   <FXDBF><LocalDB>...<DBItemData><DBItem><LAYOUT>...
+        // Older bare-LAYOUT files have it as the document root. Try direct child first, then
+        // fall back to a namespace-agnostic descendant search so both shapes work.
         Element layout = firstByLocalName(doc.getDocumentElement(), "LAYOUT");
+        if (layout == null) {
+            NodeList descendants =
+                    doc.getDocumentElement().getElementsByTagNameNS("*", "LAYOUT");
+            if (descendants.getLength() > 0) {
+                layout = (Element) descendants.item(0);
+            }
+        }
         if (layout == null) {
             throw new IOException("No <LAYOUT> element in " + relativeId);
         }
