@@ -73,6 +73,7 @@ public class ProcessExecutor {
                                                 .getProcessExecutor()
                                                 .getSessionLimit()
                                                 .getWeasyPrintSessionLimit();
+                                case VIVLIOSTYLE -> 1;
                                 case INSTALL_APP ->
                                         applicationProperties
                                                 .getProcessExecutor()
@@ -138,6 +139,7 @@ public class ProcessExecutor {
                                                 .getProcessExecutor()
                                                 .getTimeoutMinutes()
                                                 .getWeasyPrintTimeoutMinutes();
+                                case VIVLIOSTYLE -> 10L;
                                 case INSTALL_APP ->
                                         applicationProperties
                                                 .getProcessExecutor()
@@ -532,6 +534,7 @@ public class ProcessExecutor {
         PDFTOHTML,
         PYTHON_OPENCV,
         WEASYPRINT,
+        VIVLIOSTYLE,
         INSTALL_APP,
         CALIBRE,
         IMAGEMAGICK,

@@ -9,6 +9,7 @@ import io.github.pixee.security.Filenames;
 import io.swagger.v3.oas.annotations.Operation;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import stirling.software.SPDF.config.swagger.StandardPdfResponse;
 import stirling.software.common.annotations.AutoJobPostMapping;
@@ -20,6 +21,7 @@ import stirling.software.common.util.*;
 
 @ConvertApi
 @RequiredArgsConstructor
+@Slf4j
 public class ConvertHtmlToPDF {
 
     private final CustomPDFDocumentFactory pdfDocumentFactory;
@@ -52,19 +54,90 @@ public class ConvertHtmlToPDF {
                     "error.fileFormatRequired", "File must be in {0} format", ".html or .zip");
         }
 
+        byte[] inputBytes = fileInput.getBytes();
         byte[] pdfBytes =
-                FileToPdf.convertHtmlToPdf(
-                        runtimePathConfig.getWeasyPrintPath(),
-                        request,
-                        fileInput.getBytes(),
-                        originalFilename,
-                        tempFileManager,
-                        customHtmlSanitizer);
+                renderHtmlToPdf(request, inputBytes, originalFilename);
 
         pdfBytes = pdfDocumentFactory.createNewBytesBasedOnOldDocument(pdfBytes);
 
         String outputFilename = GeneralUtils.generateFilename(originalFilename, ".pdf");
 
         return WebResponseUtils.bytesToWebResponse(pdfBytes, outputFilename);
+    }
+
+    /**
+     * Routes HTML→PDF rendering between WeasyPrint and Vivliostyle. Vivliostyle is preferred when
+     * the input declares a vertical CSS `writing-mode` (Japanese 縦書き etc.) since WeasyPrint's
+     * vertical-flow support is limited. Falls back to WeasyPrint if the Vivliostyle CLI is not
+     * installed, so deployments that haven't added it keep the existing behavior.
+     */
+    private byte[] renderHtmlToPdf(HTMLToPdfRequest request, byte[] inputBytes, String filename)
+            throws Exception {
+        boolean vertical = FileToPdf.containsVerticalWritingMode(inputBytes, filename);
+
+        if (vertical && isVivliostyleAvailable()) {
+            log.info(
+                    "Vertical writing-mode detected in '{}'; rendering with Vivliostyle.",
+                    filename);
+            try {
+                return FileToPdf.convertHtmlToPdfViaVivliostyle(
+                        runtimePathConfig.getVivliostylePath(),
+                        request,
+                        inputBytes,
+                        filename,
+                        tempFileManager,
+                        customHtmlSanitizer);
+            } catch (Exception e) {
+                log.warn(
+                        "Vivliostyle render failed for '{}'; falling back to WeasyPrint: {}",
+                        filename,
+                        e.getMessage());
+            }
+        } else if (vertical) {
+            log.warn(
+                    "Vertical writing-mode detected in '{}' but Vivliostyle CLI not available;"
+                            + " falling back to WeasyPrint (vertical layout may render poorly).",
+                    filename);
+        }
+
+        return FileToPdf.convertHtmlToPdf(
+                runtimePathConfig.getWeasyPrintPath(),
+                request,
+                inputBytes,
+                filename,
+                tempFileManager,
+                customHtmlSanitizer);
+    }
+
+    private boolean isVivliostyleAvailable() {
+        String path = runtimePathConfig.getVivliostylePath();
+        if (path == null || path.isBlank()) {
+            return false;
+        }
+        // If the configured path is absolute, just check the file exists.
+        java.io.File asFile = new java.io.File(path);
+        if (asFile.isAbsolute()) {
+            return asFile.canExecute();
+        }
+        // Otherwise probe PATH for the binary (works for "vivliostyle" / "vivliostyle.cmd").
+        String pathEnv = System.getenv("PATH");
+        if (pathEnv == null) {
+            return false;
+        }
+        for (String dir : pathEnv.split(java.io.File.pathSeparator)) {
+            if (dir.isEmpty()) {
+                continue;
+            }
+            java.io.File candidate = new java.io.File(dir, path);
+            if (candidate.canExecute()) {
+                return true;
+            }
+            // Windows convenience
+            java.io.File withCmd = new java.io.File(dir, path + ".cmd");
+            if (withCmd.canExecute()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

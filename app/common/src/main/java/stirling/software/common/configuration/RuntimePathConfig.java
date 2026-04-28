@@ -33,6 +33,7 @@ public class RuntimePathConfig {
 
     // Operation paths
     private final String weasyPrintPath;
+    private final String vivliostylePath;
     private final String unoConvertPath;
     private final String calibrePath;
     private final String ocrMyPdfPath;
@@ -91,6 +92,7 @@ public class RuntimePathConfig {
 
         // Initialize Operation paths
         String defaultWeasyPrintPath = isDocker ? "/opt/venv/bin/weasyprint" : "weasyprint";
+        String defaultVivliostylePath = "vivliostyle";
         String defaultUnoConvertPath = isDocker ? "/usr/local/bin/unoconvert" : "unoconvert";
         String defaultCalibrePath = isDocker ? "/opt/calibre/ebook-convert" : "ebook-convert";
         String defaultOcrMyPdfPath = isDocker ? "/opt/venv/bin/ocrmypdf" : "ocrmypdf";
@@ -101,6 +103,7 @@ public class RuntimePathConfig {
                 resolvePath(
                         defaultWeasyPrintPath,
                         operations != null ? operations.getWeasyprint() : null);
+        this.vivliostylePath = defaultVivliostylePath;
         this.unoConvertPath =
                 resolvePath(
                         defaultUnoConvertPath,

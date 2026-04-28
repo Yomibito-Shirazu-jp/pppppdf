@@ -5,8 +5,11 @@ import { loadStripe } from '@stripe/stripe-js';
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js';
 import { supabase } from '@app/auth/supabase';
 import { Z_INDEX_OVER_SETTINGS_MODAL } from '@app/styles/zIndex';
+import { isSecureContext } from '@app/utils/protocolDetection';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+// Live keys throw IntegrationError on HTTP origins — skip loadStripe there.
+const STRIPE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = STRIPE_KEY && isSecureContext() ? loadStripe(STRIPE_KEY) : null;
 
 export type PurchaseType = 'subscription' | 'credits';
 export type CreditsPack = 'xsmall' | 'small' | 'medium' | 'large' | null;
