@@ -34,6 +34,7 @@ import {
   cloneTextElement,
   valueOr,
 } from '@app/tools/pdfTextEditor/pdfTextEditorUtils';
+import { FONT_OPTIONS, buildFontOverrideKey } from '@app/tools/pdfTextEditor/fontOptions';
 import PdfTextEditorView from '@app/components/tools/pdfTextEditor/PdfTextEditorView';
 import PdfTextEditorSidebar from '@app/components/tools/pdfTextEditor/PdfTextEditorSidebar';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
@@ -227,6 +228,25 @@ const PdfTextEditor = ({ onComplete, onError }: BaseToolProps) => {
   const [isConverting, setIsConverting] = useState(false);
   const [conversionProgress, setConversionProgress] = useState<ConversionProgress | null>(null);
   const [forceSingleTextElement, setForceSingleTextElement] = useState(true);
+  const [fontFamilyOverrides, setFontFamilyOverrides] = useState<Map<string, string>>(
+    () => new Map(),
+  );
+
+  const handleFontFamilyOverrideChange = useCallback(
+    (overrideKey: string, fontFamily: string) => {
+      if (!overrideKey) return;
+      setFontFamilyOverrides((prev) => {
+        const next = new Map(prev);
+        if (!fontFamily) {
+          next.delete(overrideKey);
+        } else {
+          next.set(overrideKey, fontFamily);
+        }
+        return next;
+      });
+    },
+    [],
+  );
   const [groupingMode, setGroupingMode] = useState<'auto' | 'paragraph' | 'singleLine'>('auto');
   const [hasVectorPreview, setHasVectorPreview] = useState(false);
   const [pagePreviews, setPagePreviews] = useState<Map<number, string>>(new Map());
@@ -1035,19 +1055,34 @@ const PdfTextEditor = ({ onComplete, onError }: BaseToolProps) => {
       return null;
     }
 
+    // Build fontId → serverFontId map from user font overrides
+    const fontIdOverrides = new Map<string, string>();
+    const docFonts = loadedDocument.fonts ?? [];
+    for (const font of docFonts) {
+      if (!font.id) continue;
+      const key = buildFontOverrideKey(font.baseName);
+      const cssFamily = fontFamilyOverrides.get(key);
+      if (!cssFamily) continue;
+      const option = FONT_OPTIONS.find((o) => o.value === cssFamily);
+      if (option?.serverFontId) {
+        fontIdOverrides.set(font.id, option.serverFontId);
+      }
+    }
+
     const updatedDocument = restoreGlyphElements(
       loadedDocument,
       groupsByPage,
       imagesByPageRef.current,
       originalImagesRef.current,
       forceSingleTextElement,
+      fontIdOverrides,
     );
     const baseName = sanitizeBaseName(fileName || loadedDocument.metadata?.title || undefined);
     return {
       document: updatedDocument,
       filename: `${baseName}.json`,
     };
-  }, [fileName, forceSingleTextElement, groupsByPage, loadedDocument]);
+  }, [fileName, fontFamilyOverrides, forceSingleTextElement, groupsByPage, loadedDocument]);
 
   const handleDownloadJson = useCallback(() => {
     const payload = buildPayload();
@@ -1660,6 +1695,8 @@ const PdfTextEditor = ({ onComplete, onError }: BaseToolProps) => {
     onMergeGroups: handleMergeGroups,
     onUngroupGroup: handleUngroupGroup,
     onLoadFile: handleLoadFileFromDropzone,
+    fontFamilyOverrides,
+    onFontFamilyOverrideChange: handleFontFamilyOverrideChange,
   }), [
     handleMergeGroups,
     handleUngroupGroup,
@@ -1693,6 +1730,8 @@ const PdfTextEditor = ({ onComplete, onError }: BaseToolProps) => {
     requestPagePreview,
     setForceSingleTextElement,
     handleLoadFileFromDropzone,
+    fontFamilyOverrides,
+    handleFontFamilyOverrideChange,
   ]);
 
   const latestViewDataRef = useRef<PdfTextEditorViewData>(viewData);

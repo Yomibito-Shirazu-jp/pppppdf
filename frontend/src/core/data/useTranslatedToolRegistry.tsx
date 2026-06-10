@@ -45,6 +45,8 @@ import RemoveImage from "@app/tools/RemoveImage";
 import CertSign from "@app/tools/CertSign";
 import TimestampPdf from "@app/tools/TimestampPdf";
 import BookletImposition from "@app/tools/BookletImposition";
+import AiImposition from "@app/tools/AiImposition";
+import PrintImposition from "@app/tools/PrintImposition";
 import Flatten from "@app/tools/Flatten";
 import Rotate from "@app/tools/Rotate";
 import PdfTextEditor from "@app/tools/pdfTextEditor/PdfTextEditor";
@@ -72,6 +74,8 @@ import { changePermissionsOperationConfig } from "@app/hooks/tools/changePermiss
 import { certSignOperationConfig } from "@app/hooks/tools/certSign/useCertSignOperation";
 import { timestampPdfOperationConfig } from "@app/hooks/tools/timestampPdf/useTimestampPdfOperation";
 import { bookletImpositionOperationConfig } from "@app/hooks/tools/bookletImposition/useBookletImpositionOperation";
+import { aiImpositionOperationConfig } from "@app/hooks/tools/aiImposition/useAiImpositionOperation";
+import { printImpositionOperationConfig } from "@app/hooks/tools/printImposition/usePrintImpositionOperation";
 import { mergeOperationConfig } from '@app/hooks/tools/merge/useMergeOperation';
 import { editTableOfContentsOperationConfig } from '@app/hooks/tools/editTableOfContents/useEditTableOfContentsOperation';
 import { autoRenameOperationConfig } from "@app/hooks/tools/autoRename/useAutoRenameOperation";
@@ -101,6 +105,8 @@ import OCRSettings from "@app/components/tools/ocr/OCRSettings";
 import ConvertSettings from "@app/components/tools/convert/ConvertSettings";
 import ChangePermissionsSettings from "@app/components/tools/changePermissions/ChangePermissionsSettings";
 import BookletImpositionSettings from "@app/components/tools/bookletImposition/BookletImpositionSettings";
+import AiImpositionSettings from "@app/components/tools/aiImposition/AiImpositionSettings";
+import PrintImpositionSettings from "@app/components/tools/printImposition/PrintImpositionSettings";
 import FlattenSettings from "@app/components/tools/flatten/FlattenSettings";
 import RedactSingleStepSettings from "@app/components/tools/redact/RedactSingleStepSettings";
 import Redact from "@app/tools/Redact";
@@ -136,6 +142,8 @@ import ValidateSignature from "@app/tools/ValidateSignature";
 import ShowJS from "@app/tools/ShowJS";
 import Automate from "@app/tools/Automate";
 import Compare from "@app/tools/Compare";
+import ImageCompare from "@app/tools/ImageCompare";
+import { imageCompareOperationConfig } from "@app/hooks/tools/imageCompare/useImageCompareOperation";
 import { CONVERT_SUPPORTED_FORMATS } from "@app/constants/convertSupportedFornats";
 
 
@@ -566,6 +574,28 @@ export function useTranslatedToolCatalog(): TranslatedToolCatalog {
         subcategoryId: SubcategoryId.PAGE_FORMATTING,
         endpoints: ["booklet-imposition"],
       },
+      aiImposition: {
+        icon: <LocalIcon icon="auto-stories-rounded" width="1.5rem" height="1.5rem" />,
+        name: t("home.aiImposition.title", "AI 折面付ページ"),
+        component: AiImposition,
+        operationConfig: aiImpositionOperationConfig,
+        automationSettings: AiImpositionSettings,
+        description: t("home.aiImposition.desc", "Signature-based PDF imposition (4/8/16/32 pages per signature) for production booklet/book printing with multiple gathered signatures"),
+        categoryId: ToolCategoryId.STANDARD_TOOLS,
+        subcategoryId: SubcategoryId.PAGE_FORMATTING,
+        endpoints: ["ai-imposition"],
+      },
+      printImposition: {
+        icon: <LocalIcon icon="print-rounded" width="1.5rem" height="1.5rem" />,
+        name: t("home.printImposition.title", "印刷面付"),
+        component: PrintImposition,
+        operationConfig: printImpositionOperationConfig,
+        automationSettings: PrintImpositionSettings,
+        description: t("home.printImposition.desc", "Production-grade print imposition. Layouts: folio / quarto / octavo / card-fold. Includes registration marks (トンボ)."),
+        categoryId: ToolCategoryId.STANDARD_TOOLS,
+        subcategoryId: SubcategoryId.PAGE_FORMATTING,
+        endpoints: ["print-imposition"],
+      },
       pdfToSinglePage: {
 
         icon: <LocalIcon icon="looks-one-outline-rounded" width="1.5rem" height="1.5rem" />,
@@ -896,6 +926,18 @@ export function useTranslatedToolCatalog(): TranslatedToolCatalog {
         automationSettings: null,
         synonyms: getSynonyms(t, "compare"),
         supportsAutomate: false
+      },
+      imageCompare: {
+        icon: <LocalIcon icon="image-search-rounded" width="1.5rem" height="1.5rem" />,
+        name: t("home.imageCompare.title", "AI 画像比較"),
+        component: ImageCompare,
+        operationConfig: imageCompareOperationConfig,
+        automationSettings: null,
+        description: t("home.imageCompare.desc", "Compare two images (PNG/JPG/WebP/PDF) using Google Gemini Vision. Detects text, logo, layout, and color differences."),
+        categoryId: ToolCategoryId.RECOMMENDED_TOOLS,
+        subcategoryId: SubcategoryId.GENERAL,
+        maxFiles: 2,
+        endpoints: ["image-compare"],
       },
       compress: {
         icon: <LocalIcon icon="zoom-in-map-rounded" width="1.5rem" height="1.5rem" />,

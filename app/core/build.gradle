@@ -106,6 +106,12 @@ dependencies {
     // PDFBox Graphics2D bridge for Batik SVG to PDF conversion
     implementation 'de.rototor.pdfbox:graphics2d:3.0.5'
 
+    // Google Cloud SDKs for handwriting OCR (Gemini + Document AI fallback)
+    // Loaded lazily — only used when googleCloud.enabled=true in settings.yml
+    implementation platform('com.google.cloud:libraries-bom:26.50.0')
+    implementation 'com.google.cloud:google-cloud-vertexai'
+    implementation 'com.google.cloud:google-cloud-document-ai'
+
     // TwelveMonkeys
     runtimeOnly "com.twelvemonkeys.imageio:imageio-batik:$imageioVersion"
     runtimeOnly "com.twelvemonkeys.imageio:imageio-bmp:$imageioVersion"

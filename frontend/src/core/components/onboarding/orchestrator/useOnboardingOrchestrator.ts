@@ -214,7 +214,7 @@ export function useOnboardingOrchestrator(
 
         setRuntimeState((prev) => ({
           ...prev,
-          requiresPasswordChange: accountData.changeCredsFlag,
+          requiresPasswordChange: false,
           firstLoginUsername: accountData.username,
           usingDefaultCredentials: loginPageData.showDefaultCredentials,
           requiresMfaSetup: parseMfaRequired(accountData.settings),

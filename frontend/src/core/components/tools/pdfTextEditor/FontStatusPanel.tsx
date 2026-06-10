@@ -9,6 +9,7 @@ import {
   Group,
   List,
   Paper,
+  Select,
   Stack,
   Text,
   Tooltip,
@@ -30,6 +31,7 @@ import {
   getFontStatusColor,
   getFontStatusDescription,
 } from '@app/tools/pdfTextEditor/fontAnalysis';
+import { FONT_OPTIONS, buildFontOverrideKey } from '@app/tools/pdfTextEditor/fontOptions';
 import LocalIcon from '@app/components/shared/LocalIcon';
 import { Tooltip as CustomTooltip } from '@app/components/shared/Tooltip';
 
@@ -38,6 +40,10 @@ interface FontStatusPanelProps {
   pageIndex?: number;
   isCollapsed?: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
+  /** Map: normalized PDF font base name → CSS font-family the user picked. */
+  fontFamilyOverrides?: Map<string, string>;
+  /** Set / clear an override. Empty fontFamily clears it. */
+  onFontFamilyOverrideChange?: (overrideKey: string, fontFamily: string) => void;
 }
 
 const FontStatusBadge = ({ analysis }: { analysis: FontAnalysis }) => {
@@ -74,9 +80,22 @@ const FontStatusBadge = ({ analysis }: { analysis: FontAnalysis }) => {
   );
 };
 
-const FontDetailItem = ({ analysis }: { analysis: FontAnalysis }) => {
+interface FontDetailItemProps {
+  analysis: FontAnalysis;
+  fontFamilyOverrides?: Map<string, string>;
+  onFontFamilyOverrideChange?: (overrideKey: string, fontFamily: string) => void;
+}
+
+const FontDetailItem = ({
+  analysis,
+  fontFamilyOverrides,
+  onFontFamilyOverrideChange,
+}: FontDetailItemProps) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
+
+  const overrideKey = buildFontOverrideKey(analysis.baseName);
+  const currentOverride = overrideKey ? fontFamilyOverrides?.get(overrideKey) ?? '' : '';
 
   return (
     <Paper withBorder px="sm" py="md" style={{ cursor: 'pointer' }} onClick={() => setExpanded(!expanded)}>
@@ -98,12 +117,38 @@ const FontDetailItem = ({ analysis }: { analysis: FontAnalysis }) => {
                 subset
               </Badge>
             )}
+            {currentOverride && (
+              <Badge size="xs" color="violet" variant="light" style={{ flexShrink: 0 }}>
+                {t('pdfTextEditor.fontAnalysis.overridden', 'override')}
+              </Badge>
+            )}
           </Group>
           <Group gap={4} wrap="nowrap" style={{ flexShrink: 0 }}>
             <FontStatusBadge analysis={analysis} />
             {expanded ? <ExpandLessIcon sx={{ fontSize: 16 }} /> : <ExpandMoreIcon sx={{ fontSize: 16 }} />}
           </Group>
         </Flex>
+
+        {/* Font picker — visible always, lets user choose what system font this PDF font
+            renders as in the editor preview. Click stops propagation so picker doesn't
+            collapse the detail panel. */}
+        {onFontFamilyOverrideChange && overrideKey && (
+          <div onClick={(e) => e.stopPropagation()}>
+            <Select
+              size="xs"
+              placeholder={t('pdfTextEditor.fontAnalysis.matchedFont', 'Matched display font')}
+              value={currentOverride || null}
+              onChange={(value) => onFontFamilyOverrideChange(overrideKey, value ?? '')}
+              data={FONT_OPTIONS.map((opt) => ({
+                value: opt.value,
+                label: opt.label,
+              }))}
+              clearable
+              searchable
+              comboboxProps={{ withinPortal: true }}
+            />
+          </div>
+        )}
 
         <Collapse in={expanded}>
           <Stack gap={4} mt={4}>
@@ -180,7 +225,9 @@ const FontStatusPanel: React.FC<FontStatusPanelProps> = ({
   document,
   pageIndex,
   isCollapsed = false,
-  onCollapsedChange
+  onCollapsedChange,
+  fontFamilyOverrides,
+  onFontFamilyOverrideChange,
 }) => {
   const { t } = useTranslation();
 
@@ -288,7 +335,12 @@ const FontStatusPanel: React.FC<FontStatusPanelProps> = ({
             {/* Font List */}
             <Stack gap={4} mt="xs">
               {fonts.map((font, index) => (
-                <FontDetailItem key={`${font.fontId}-${index}`} analysis={font} />
+                <FontDetailItem
+                  key={`${font.fontId}-${index}`}
+                  analysis={font}
+                  fontFamilyOverrides={fontFamilyOverrides}
+                  onFontFamilyOverrideChange={onFontFamilyOverrideChange}
+                />
               ))}
             </Stack>
           </Stack>

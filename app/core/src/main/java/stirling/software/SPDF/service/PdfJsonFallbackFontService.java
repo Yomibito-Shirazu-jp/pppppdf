@@ -393,8 +393,7 @@ public class PdfJsonFallbackFontService {
             return;
         }
         try (Stream<Path> stream = Files.list(dir)) {
-            stream.filter(Files::isRegularFile)
-                    .forEach(this::registerCustomFont);
+            stream.filter(Files::isRegularFile).forEach(this::registerCustomFont);
         } catch (IOException e) {
             log.warn("Failed to scan custom fonts directory {}: {}", dir, e.getMessage());
         }
@@ -407,8 +406,7 @@ public class PdfJsonFallbackFontService {
 
     // Foundry prefixes to strip when computing custom font aliases
     private static final java.util.List<String> FOUNDRY_PREFIXES =
-            java.util.List.of(
-                    "ap-otf-", "a-otf-", "ap-sk-", "u-otf-", "fot-", "ot-", "otf-");
+            java.util.List.of("ap-otf-", "a-otf-", "ap-sk-", "u-otf-", "fot-", "ot-", "otf-");
 
     private void registerCustomFont(Path file) {
         String fileName = file.getFileName().toString();
@@ -427,9 +425,7 @@ public class PdfJsonFallbackFontService {
 
         // Compute family alias: strip foundry prefix, then take first segment
         String normalized =
-                WHITESPACE_PATTERN
-                        .matcher(baseName.toLowerCase(Locale.ROOT))
-                        .replaceAll("");
+                WHITESPACE_PATTERN.matcher(baseName.toLowerCase(Locale.ROOT)).replaceAll("");
         for (String prefix : FOUNDRY_PREFIXES) {
             if (normalized.startsWith(prefix)) {
                 normalized = normalized.substring(prefix.length());

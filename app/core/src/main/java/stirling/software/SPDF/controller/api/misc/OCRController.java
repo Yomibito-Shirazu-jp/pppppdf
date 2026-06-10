@@ -34,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import stirling.software.SPDF.config.EndpointConfiguration;
 import stirling.software.SPDF.model.api.misc.ProcessPdfWithOcrRequest;
+import stirling.software.SPDF.service.handwriting.HandwritingOcrService;
 import stirling.software.common.annotations.AutoJobPostMapping;
 import stirling.software.common.annotations.api.MiscApi;
 import stirling.software.common.configuration.RuntimePathConfig;
@@ -58,6 +59,7 @@ public class OCRController {
     private final TempFileManager tempFileManager;
     private final EndpointConfiguration endpointConfiguration;
     private final RuntimePathConfig runtimePathConfig;
+    private final HandwritingOcrService handwritingOcrService;
 
     private boolean isOcrMyPdfEnabled() {
         return endpointConfiguration.isGroupEnabled("OCRmyPDF");
@@ -101,6 +103,11 @@ public class OCRController {
         String ocrType = request.getOcrType();
         String ocrRenderType = request.getOcrRenderType();
         Boolean removeImagesAfter = request.isRemoveImagesAfter();
+        String engine = request.getEngine();
+
+        if ("handwriting".equalsIgnoreCase(engine)) {
+            return processWithHandwritingEngine(inputFile, request.getOutputFormat());
+        }
 
         if (selectedLanguages == null || selectedLanguages.isEmpty()) {
             throw ExceptionUtils.createOcrLanguageRequiredException();
@@ -200,6 +207,61 @@ public class OCRController {
                 // Return the OCR processed PDF as a response
                 return WebResponseUtils.bytesToWebResponse(pdfBytes, outputFilename);
             }
+        }
+    }
+
+    private ResponseEntity<byte[]> processWithHandwritingEngine(
+            MultipartFile inputFile, String outputFormat) throws IOException {
+        if (!handwritingOcrService.isEnabled()) {
+            throw ExceptionUtils.createRuntimeException(
+                    "error.handwritingOcrUnavailable",
+                    "Handwriting OCR is not configured. Set googleCloud.enabled=true and provide"
+                            + " GCP credentials in settings.yml.",
+                    null);
+        }
+
+        byte[] pdfBytes = inputFile.getBytes();
+        String transcript = handwritingOcrService.recognize(pdfBytes);
+        log.info(
+                "Handwriting OCR completed: {} pages, {} chars",
+                Math.max(1, transcript.split("--- Page ").length - 1),
+                transcript.length());
+
+        String baseName =
+                GeneralUtils.removeExtension(
+                        Filenames.toSimpleFileName(inputFile.getOriginalFilename()));
+        byte[] transcriptBytes = transcript.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+
+        // 'text' (default) = transcript-only download — typical 文字起こし use case
+        if (outputFormat == null
+                || outputFormat.isBlank()
+                || "text".equalsIgnoreCase(outputFormat)) {
+            String outputTxtFilename = baseName + "_transcript.txt";
+            return WebResponseUtils.bytesToWebResponse(
+                    transcriptBytes, outputTxtFilename, MediaType.TEXT_PLAIN);
+        }
+
+        // 'zip' = original PDF + transcript bundled
+        String outputZipFilename = baseName + "_handwriting_OCR.zip";
+        try (TempFile tempZipFile = new TempFile(tempFileManager, ".zip");
+                ZipOutputStream zipOut =
+                        new ZipOutputStream(Files.newOutputStream(tempZipFile.getPath()))) {
+
+            ZipEntry pdfEntry = new ZipEntry(baseName + ".pdf");
+            zipOut.putNextEntry(pdfEntry);
+            zipOut.write(pdfBytes);
+            zipOut.closeEntry();
+
+            ZipEntry txtEntry = new ZipEntry(baseName + "_transcript.txt");
+            zipOut.putNextEntry(txtEntry);
+            zipOut.write(transcriptBytes);
+            zipOut.closeEntry();
+
+            zipOut.finish();
+
+            byte[] zipBytes = Files.readAllBytes(tempZipFile.getPath());
+            return WebResponseUtils.bytesToWebResponse(
+                    zipBytes, outputZipFilename, MediaType.APPLICATION_OCTET_STREAM);
         }
     }
 

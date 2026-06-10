@@ -41,10 +41,12 @@ function stripExt(name: string): string {
 export const buildOCRFormData = (parameters: OCRParameters, file: File): FormData => {
   const formData = new FormData();
   formData.append('fileInput', file);
+  formData.append('engine', parameters.engine);
+  formData.append('outputFormat', parameters.outputFormat);
   parameters.languages.forEach((lang) => formData.append('languages', lang));
   formData.append('ocrType', parameters.ocrType);
   formData.append('ocrRenderType', parameters.ocrRenderType);
-  
+
   const options = parameters.additionalOptions || [];
   formData.append('sidecar', options.includes('sidecar').toString());
   formData.append('deskew', options.includes('deskew').toString());
@@ -73,25 +75,32 @@ export const ocrResponseHandler = async (blob: Blob, originalFiles: File[], extr
     return [new File([blob], `ocr_${base}.zip`, { type: 'application/zip' })];
   }
 
-  // Not a PDF: surface error details if present
-  if (!head.startsWith('%PDF')) {
-    const textBuf = await blob.slice(0, 1024).arrayBuffer();
-    const text = new TextDecoder().decode(new Uint8Array(textBuf));
-    if (/error|exception|html/i.test(text)) {
-      if (text.includes('OCR tools') && text.includes('not installed')) {
-        throw new Error('OCR tools (OCRmyPDF or Tesseract) are not installed on the server. Use the standard or fat Docker image instead of ultra-lite, or install OCR tools manually.');
-      }
-      const title =
-        text.match(/<title[^>]*>([^<]+)<\/title>/i)?.[1] ||
-        text.match(/<h1[^>]*>([^<]+)<\/h1>/i)?.[1] ||
-        'Unknown error';
-      throw new Error(`OCR service error: ${title}`);
-    }
-    throw new Error(`Response is not a valid PDF. Header: "${head}"`);
+  // PDF: standard tesseract output
+  if (head.startsWith('%PDF')) {
+    const originalName = originalFiles[0].name;
+    return [new File([blob], originalName, { type: 'application/pdf' })];
   }
 
-  const originalName = originalFiles[0].name;
-  return [new File([blob], originalName, { type: 'application/pdf' })];
+  // Plain-text transcript (handwriting engine, outputFormat=text)
+  if (blob.type.startsWith('text/plain')) {
+    const base = stripExt(originalFiles[0].name);
+    return [new File([blob], `${base}_transcript.txt`, { type: 'text/plain' })];
+  }
+
+  // Unknown response: surface error details if present
+  const textBuf = await blob.slice(0, 1024).arrayBuffer();
+  const text = new TextDecoder().decode(new Uint8Array(textBuf));
+  if (/error|exception|html/i.test(text)) {
+    if (text.includes('OCR tools') && text.includes('not installed')) {
+      throw new Error('OCR tools (OCRmyPDF or Tesseract) are not installed on the server. Use the standard or fat Docker image instead of ultra-lite, or install OCR tools manually.');
+    }
+    const title =
+      text.match(/<title[^>]*>([^<]+)<\/title>/i)?.[1] ||
+      text.match(/<h1[^>]*>([^<]+)<\/h1>/i)?.[1] ||
+      'Unknown error';
+    throw new Error(`OCR service error: ${title}`);
+  }
+  throw new Error(`Unexpected OCR response. Header: "${head}"`);
 };
 
 // Static configuration object (without t function dependencies)

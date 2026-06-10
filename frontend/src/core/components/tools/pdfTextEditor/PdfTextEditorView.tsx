@@ -38,6 +38,7 @@ import {
   TextGroup,
 } from '@app/tools/pdfTextEditor/pdfTextEditorTypes';
 import { getImageBounds, pageDimensions } from '@app/tools/pdfTextEditor/pdfTextEditorUtils';
+import { buildFontOverrideKey } from '@app/tools/pdfTextEditor/fontOptions';
 
 const MAX_RENDER_WIDTH = 820;
 const MIN_BOX_SIZE = 18;
@@ -389,6 +390,7 @@ const PdfTextEditorView = ({ data }: PdfTextEditorViewProps) => {
     onMergeGroups,
     onUngroupGroup,
     onLoadFile,
+    fontFamilyOverrides,
   } = data;
 
   // Define derived variables immediately after props destructuring, before any hooks
@@ -454,6 +456,16 @@ const PdfTextEditorView = ({ data }: PdfTextEditorViewProps) => {
     }
 
     const font = resolveFont(fontId, pageIndex);
+
+    // User-picked override wins over both embedded fonts and standard fallbacks
+    const overrideKey = buildFontOverrideKey(font?.baseName ?? font?.standard14Name);
+    if (overrideKey) {
+      const overrideFamily = fontFamilyOverrides.get(overrideKey);
+      if (overrideFamily) {
+        return overrideFamily;
+      }
+    }
+
     const lookupKeys = buildFontLookupKeys(fontId, font ?? undefined, pageIndex);
     for (const key of lookupKeys) {
       const loadedFamily = fontFamilies.get(key);
@@ -479,7 +491,7 @@ const PdfTextEditorView = ({ data }: PdfTextEditorViewProps) => {
     }
 
     return 'Arial, Helvetica, sans-serif';
-  }, [resolveFont, fontFamilies]);
+  }, [resolveFont, fontFamilies, fontFamilyOverrides]);
 
   useEffect(() => {
     clearSelection();

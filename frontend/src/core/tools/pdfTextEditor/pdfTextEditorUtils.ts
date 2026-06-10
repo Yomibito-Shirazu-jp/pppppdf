@@ -1216,12 +1216,21 @@ export const buildUpdatedDocument = (
   return updated;
 };
 
+const applyFontIdOverride = (
+  element: PdfJsonTextElement,
+  fontIdOverrides: Map<string, string>,
+): PdfJsonTextElement => {
+  if (!element.fontId || !fontIdOverrides.has(element.fontId)) return element;
+  return { ...element, fontId: fontIdOverrides.get(element.fontId)! };
+};
+
 export const restoreGlyphElements = (
   source: PdfJsonDocument,
   groupsByPage: TextGroup[][],
   imagesByPage: PdfJsonImageElement[][],
   originalImagesByPage: PdfJsonImageElement[][],
   forceMergedGroups: boolean = false,
+  fontIdOverrides: Map<string, string> = new Map(),
 ): PdfJsonDocument => {
   const updated = deepCloneDocument(source);
   const pages = updated.pages ?? [];
@@ -1245,12 +1254,12 @@ export const restoreGlyphElements = (
         // Always try to rebuild paragraph lines if text has newlines
         const paragraphElements = rebuildParagraphLineElements(group);
         if (paragraphElements && paragraphElements.length > 0) {
-          rebuiltElements.push(...paragraphElements);
+          rebuiltElements.push(...paragraphElements.map((el) => applyFontIdOverride(el, fontIdOverrides)));
           return;
         }
         // If no newlines or rebuilding failed, check if we should force merge
         if (forceMergedGroups) {
-          rebuiltElements.push(createMergedElement(group));
+          rebuiltElements.push(applyFontIdOverride(createMergedElement(group), fontIdOverrides));
           return;
         }
         const originalGlyphCount = group.originalElements.reduce(
@@ -1261,21 +1270,21 @@ export const restoreGlyphElements = (
         const targetGlyphCount = countGraphemes(normalizedText);
 
         if (targetGlyphCount !== originalGlyphCount) {
-          rebuiltElements.push(createMergedElement(group));
+          rebuiltElements.push(applyFontIdOverride(createMergedElement(group), fontIdOverrides));
           return;
         }
 
         const originals = group.originalElements.map(cloneTextElement);
         const distributed = distributeTextAcrossElements(normalizedText, originals);
         if (distributed) {
-          rebuiltElements.push(...originals);
+          rebuiltElements.push(...originals.map((el) => applyFontIdOverride(el, fontIdOverrides)));
         } else {
-          rebuiltElements.push(createMergedElement(group));
+          rebuiltElements.push(applyFontIdOverride(createMergedElement(group), fontIdOverrides));
         }
         return;
       }
 
-      rebuiltElements.push(...group.originalElements.map(cloneTextElement));
+      rebuiltElements.push(...group.originalElements.map(cloneTextElement).map((el) => applyFontIdOverride(el, fontIdOverrides)));
     });
 
     return {

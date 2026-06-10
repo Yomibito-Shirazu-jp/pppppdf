@@ -46,4 +46,21 @@ public class ProcessPdfWithOcrRequest extends PDFFile {
 
     @Schema(description = "Remove images from the output PDF if set to true")
     private boolean removeImagesAfter;
+
+    @Schema(
+            description =
+                    "OCR engine: 'tesseract' (printed text, default) or 'handwriting' "
+                            + "(Google Cloud Gemini with Document AI fallback, requires googleCloud.enabled)",
+            allowableValues = {"tesseract", "handwriting"},
+            defaultValue = "tesseract")
+    private String engine = "tesseract";
+
+    @Schema(
+            description =
+                    "Handwriting engine output format: 'text' returns the transcript as a .txt"
+                            + " file (default for handwriting), 'zip' returns the original PDF +"
+                            + " transcript bundled. Ignored when engine=tesseract.",
+            allowableValues = {"text", "zip"},
+            defaultValue = "text")
+    private String outputFormat = "text";
 }

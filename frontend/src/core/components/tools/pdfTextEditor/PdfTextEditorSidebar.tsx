@@ -84,6 +84,8 @@ const PdfTextEditorSidebar = ({ data }: PdfTextEditorSidebarProps) => {
     onForceSingleTextElementChange,
     onGroupingModeChange,
     onAutoScaleTextChange,
+    fontFamilyOverrides,
+    onFontFamilyOverrideChange,
   } = data;
 
   // Get page dimensions
@@ -264,6 +266,8 @@ const PdfTextEditorSidebar = ({ data }: PdfTextEditorSidebarProps) => {
                 pageIndex={selectedPage}
                 isCollapsed={fontsCollapsed}
                 onCollapsedChange={setFontsCollapsed}
+                fontFamilyOverrides={fontFamilyOverrides}
+                onFontFamilyOverrideChange={onFontFamilyOverrideChange}
               />
             )}
           </Stack>

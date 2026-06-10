@@ -611,6 +611,7 @@ public class ApplicationProperties {
         // 'https://app.example.com'). If not set, falls back to backendUrl.
         private boolean enableMobileScanner = false; // Enable mobile phone QR code upload feature
         private MobileScannerSettings mobileScannerSettings = new MobileScannerSettings();
+        private GoogleCloud googleCloud = new GoogleCloud();
 
         @Data
         public static class MobileScannerSettings {
@@ -618,6 +619,31 @@ public class ApplicationProperties {
             private String imageResolution = "full"; // Options: "full", "reduced"
             private String pageFormat = "A4"; // Options: "keep", "A4", "letter"
             private boolean stretchToFit = false; // Whether to stretch image to fill page
+        }
+
+        @Data
+        public static class GoogleCloud {
+            private boolean enabled = false;
+            private String projectId = "";
+            private String location = "us-central1";
+            private String credentialsPath = "";
+            private Gemini gemini = new Gemini();
+            private DocumentAi documentAi = new DocumentAi();
+
+            @Data
+            public static class Gemini {
+                private boolean enabled = true;
+                private String model = "gemini-2.5-pro";
+                private double temperature = 0.0;
+                private int maxOutputTokens = 8192;
+            }
+
+            @Data
+            public static class DocumentAi {
+                private boolean enabled = true;
+                private String processorId = "57695b373b653f96";
+                private String processorLocation = "us";
+            }
         }
 
         public boolean isAnalyticsEnabled() {

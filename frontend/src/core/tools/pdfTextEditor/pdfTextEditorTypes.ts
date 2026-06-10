@@ -230,4 +230,8 @@ export interface PdfTextEditorViewData {
   onMergeGroups: (pageIndex: number, groupIds: string[]) => boolean;
   onUngroupGroup: (pageIndex: number, groupId: string) => boolean;
   onLoadFile: (file: File) => void;
+  /** Map: normalized PDF font base name → CSS font-family the user picked for editor display. */
+  fontFamilyOverrides: Map<string, string>;
+  /** Set / clear an override. Empty string clears it. */
+  onFontFamilyOverrideChange: (overrideKey: string, fontFamily: string) => void;
 }

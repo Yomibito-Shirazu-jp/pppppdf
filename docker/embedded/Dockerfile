@@ -67,6 +67,17 @@ COPY --link --chown=1000:1000 scripts/ /scripts/
 # Fonts go to system dir, root ownership is correct (world-readable)
 COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/truetype/
 
+# Install Ruby + jamis/impose CLI (pdf-impose gem) for the "印刷面付" tool.
+# We strip ruby-dev / build-essential after gem install to keep the image lean.
+USER root
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends ruby ruby-dev build-essential; \
+    gem install pdf-impose --no-document; \
+    apt-get purge -y --auto-remove ruby-dev build-essential; \
+    rm -rf /var/lib/apt/lists/*; \
+    which impose
+
 # Permissions and configuration
 RUN set -eux; \
     chmod +x /scripts/*; \

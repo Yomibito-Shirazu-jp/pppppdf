@@ -239,6 +239,20 @@ system:
     cleanupSystemTemp: false # Whether to clean broader system temp directory
   databaseBackup:
     cron: "0 0 0 * * ?" # Cron expression for automatic database backups "0 0 0 * * ?" daily at midnight
+  googleCloud:
+    enabled: false # set to 'true' to enable Google Cloud handwriting OCR (Gemini primary, Document AI fallback). Requires a service account JSON.
+    projectId: "" # GCP project ID (e.g. 'aidriven-mastering-fyqu')
+    location: us-central1 # Vertex AI region for Gemini calls (e.g. 'us-central1', 'asia-northeast1')
+    credentialsPath: "" # Path to GCP service account JSON. Leave empty to use GOOGLE_APPLICATION_CREDENTIALS env var or workload identity.
+    gemini:
+      enabled: true # set to 'false' to skip Gemini and go straight to Document AI
+      model: gemini-2.5-pro # Gemini model name. 'gemini-2.5-pro' = highest accuracy. 'gemini-2.5-flash' = cheaper/faster.
+      temperature: 0.0 # Lower = more deterministic OCR output
+      maxOutputTokens: 8192 # Max tokens per page response
+    documentAi:
+      enabled: true # set to 'false' to disable Document AI fallback
+      processorId: 57695b373b653f96 # Document AI OCR processor ID (created in GCP Console; supports handwriting). 15 pages / 20 MB per request.
+      processorLocation: us # Document AI processor region: 'us' or 'eu'
 
 storage:
   enabled: false # set to 'true' to allow users to store files on the server (requires security.enableLogin) [ALPHA]

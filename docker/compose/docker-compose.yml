@@ -16,6 +16,8 @@ services:
       - ../../stirling/latest/data:/usr/share/tessdata:rw
       - ../../stirling/latest/config:/configs:rw
       - ../../stirling/latest/logs:/logs:rw
+      # GCP service account for handwriting OCR (Gemini + Document AI)
+      - C:/Users/ishij/.gcp/aidriven-mastering-fyqu/stirling-pdf-ocr.json:/credentials/gcp.json:ro
     environment:
       DISABLE_ADDITIONAL_FEATURES: "true"
       SECURITY_ENABLELOGIN: "false"
@@ -27,6 +29,16 @@ services:
       METRICS_ENABLED: "true"
       SYSTEM_GOOGLEVISIBILITY: "true"
       SHOW_SURVEY: "true"
+      GOOGLE_APPLICATION_CREDENTIALS: /credentials/gcp.json
+      # Google Cloud Handwriting OCR settings
+      SYSTEM_GOOGLECLOUD_ENABLED: "true"
+      SYSTEM_GOOGLECLOUD_PROJECTID: "aidriven-mastering-fyqu"
+      SYSTEM_GOOGLECLOUD_LOCATION: "us-central1"
+      SYSTEM_GOOGLECLOUD_GEMINI_ENABLED: "true"
+      SYSTEM_GOOGLECLOUD_GEMINI_MODEL: "gemini-2.5-pro"
+      SYSTEM_GOOGLECLOUD_DOCUMENTAI_ENABLED: "true"
+      SYSTEM_GOOGLECLOUD_DOCUMENTAI_PROCESSORID: "57695b373b653f96"
+      SYSTEM_GOOGLECLOUD_DOCUMENTAI_PROCESSORLOCATION: "us"
     networks:
       - stirling-network
 
