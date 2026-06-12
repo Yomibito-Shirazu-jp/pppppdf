@@ -58,6 +58,10 @@ export const CORE_REGULAR_TOOL_IDS = [
   'bookletImposition',
   'pdfTextEditor',
   'formFill',
+  'aiImposition',
+  'printImposition',
+  'imageCompare',
+  'pdfToIllustratorScript',
 ] as const;
 
 export const CORE_SUPER_TOOL_IDS = [

@@ -47,6 +47,8 @@ import TimestampPdf from "@app/tools/TimestampPdf";
 import BookletImposition from "@app/tools/BookletImposition";
 import AiImposition from "@app/tools/AiImposition";
 import PrintImposition from "@app/tools/PrintImposition";
+import PdfToIllustratorScript from "@app/tools/PdfToIllustratorScript";
+import { pdfToIllustratorScriptOperationConfig } from "@app/hooks/tools/pdfToIllustratorScript/usePdfToIllustratorScriptOperation";
 import Flatten from "@app/tools/Flatten";
 import Rotate from "@app/tools/Rotate";
 import PdfTextEditor from "@app/tools/pdfTextEditor/PdfTextEditor";
@@ -595,6 +597,20 @@ export function useTranslatedToolCatalog(): TranslatedToolCatalog {
         categoryId: ToolCategoryId.STANDARD_TOOLS,
         subcategoryId: SubcategoryId.PAGE_FORMATTING,
         endpoints: ["print-imposition"],
+      },
+      pdfToIllustratorScript: {
+        icon: <LocalIcon icon="code-rounded" width="1.5rem" height="1.5rem" />,
+        name: t("home.pdfToIllustratorScript.title", "PDFからIllustratorスクリプト生成"),
+        component: PdfToIllustratorScript,
+        operationConfig: pdfToIllustratorScriptOperationConfig,
+        automationSettings: null,
+        description: t("home.pdfToIllustratorScript.desc", "GeminiAIを使用してPDFをAdobe Illustrator ExtendScript (.jsx) に変換します。縦書き・横書き対応。"),
+        categoryId: ToolCategoryId.STANDARD_TOOLS,
+        subcategoryId: SubcategoryId.PAGE_FORMATTING,
+        endpoints: ["pdf-to-illustrator-script"],
+        maxFiles: 1,
+        synonyms: getSynonyms(t, "pdfToIllustratorScript"),
+        supportsAutomate: false,
       },
       pdfToSinglePage: {
 
