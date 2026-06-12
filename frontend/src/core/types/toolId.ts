@@ -62,6 +62,7 @@ export const CORE_REGULAR_TOOL_IDS = [
   'printImposition',
   'imageCompare',
   'pdfToIllustratorScript',
+  'pdfToInDesignScript',
 ] as const;
 
 export const CORE_SUPER_TOOL_IDS = [

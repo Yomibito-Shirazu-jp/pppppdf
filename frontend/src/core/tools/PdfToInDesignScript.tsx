@@ -3,17 +3,17 @@ import { createToolFlow } from '@app/components/tools/shared/createToolFlow';
 import { useBaseTool } from '@app/hooks/tools/shared/useBaseTool';
 import { BaseToolProps, ToolComponent } from '@app/types/tool';
 import {
-  usePdfToIllustratorScriptParameters,
-  usePdfToIllustratorScriptOperation,
-} from '@app/hooks/tools/pdfToIllustratorScript/usePdfToIllustratorScriptOperation';
+  usePdfToInDesignScriptParameters,
+  usePdfToInDesignScriptOperation,
+} from '@app/hooks/tools/pdfToInDesignScript/usePdfToInDesignScriptOperation';
 
-const PdfToIllustratorScript = (props: BaseToolProps) => {
+const PdfToInDesignScript = (props: BaseToolProps) => {
   const { t } = useTranslation();
 
   const base = useBaseTool(
-    'pdfToIllustratorScript',
-    usePdfToIllustratorScriptParameters,
-    usePdfToIllustratorScriptOperation,
+    'pdfToInDesignScript',
+    usePdfToInDesignScriptParameters,
+    usePdfToInDesignScriptOperation,
     props,
   );
 
@@ -24,9 +24,9 @@ const PdfToIllustratorScript = (props: BaseToolProps) => {
     },
     steps: [],
     executeButton: {
-      text: t('pdfToIllustratorScript.submit', 'Illustratorスクリプトを生成'),
+      text: t('pdfToInDesignScript.submit', 'InDesignスクリプトを生成'),
       isVisible: !base.hasResults,
-      loadingText: t('pdfToIllustratorScript.loading', 'Geminiで変換中…'),
+      loadingText: t('pdfToInDesignScript.loading', 'Geminiで変換中…'),
       onClick: base.handleExecute,
       endpointEnabled: base.endpointEnabled,
       paramsValid: base.params.validateParameters(),
@@ -34,11 +34,11 @@ const PdfToIllustratorScript = (props: BaseToolProps) => {
     review: {
       isVisible: base.hasResults,
       operation: base.operation,
-      title: t('pdfToIllustratorScript.result', 'Illustratorスクリプト生成完了'),
+      title: t('pdfToInDesignScript.result', 'InDesignスクリプト生成完了'),
       onFileClick: base.handleThumbnailClick,
       onUndo: base.handleUndo,
     },
   });
 };
 
-export default PdfToIllustratorScript as ToolComponent;
+export default PdfToInDesignScript as ToolComponent;

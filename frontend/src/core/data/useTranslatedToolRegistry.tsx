@@ -49,6 +49,8 @@ import AiImposition from "@app/tools/AiImposition";
 import PrintImposition from "@app/tools/PrintImposition";
 import PdfToIllustratorScript from "@app/tools/PdfToIllustratorScript";
 import { pdfToIllustratorScriptOperationConfig } from "@app/hooks/tools/pdfToIllustratorScript/usePdfToIllustratorScriptOperation";
+import PdfToInDesignScript from "@app/tools/PdfToInDesignScript";
+import { pdfToInDesignScriptOperationConfig } from "@app/hooks/tools/pdfToInDesignScript/usePdfToInDesignScriptOperation";
 import Flatten from "@app/tools/Flatten";
 import Rotate from "@app/tools/Rotate";
 import PdfTextEditor from "@app/tools/pdfTextEditor/PdfTextEditor";
@@ -600,16 +602,30 @@ export function useTranslatedToolCatalog(): TranslatedToolCatalog {
       },
       pdfToIllustratorScript: {
         icon: <LocalIcon icon="code-rounded" width="1.5rem" height="1.5rem" />,
-        name: t("home.pdfToIllustratorScript.title", "PDFからInDesignスクリプト生成"),
+        name: t("home.pdfToIllustratorScript.title", "PDFからIllustratorスクリプト生成"),
         component: PdfToIllustratorScript,
         operationConfig: pdfToIllustratorScriptOperationConfig,
         automationSettings: null,
-        description: t("home.pdfToIllustratorScript.desc", "GeminiAIを使用してPDFをAdobe InDesign ExtendScript (.jsx) に変換します。縦書き・CMYK・テキストフレーム対応。"),
+        description: t("home.pdfToIllustratorScript.desc", "GeminiAIを使用してPDFをAdobe Illustrator ExtendScript (.jsx) に変換します。縦書き・CMYK・アートボード対応。"),
         categoryId: ToolCategoryId.STANDARD_TOOLS,
         subcategoryId: SubcategoryId.PAGE_FORMATTING,
         endpoints: ["pdf-to-illustrator-script"],
         maxFiles: 1,
         synonyms: getSynonyms(t, "pdfToIllustratorScript"),
+        supportsAutomate: false,
+      },
+      pdfToInDesignScript: {
+        icon: <LocalIcon icon="code-rounded" width="1.5rem" height="1.5rem" />,
+        name: t("home.pdfToInDesignScript.title", "PDFからInDesignスクリプト生成"),
+        component: PdfToInDesignScript,
+        operationConfig: pdfToInDesignScriptOperationConfig,
+        automationSettings: null,
+        description: t("home.pdfToInDesignScript.desc", "GeminiAIを使用してPDFをAdobe InDesign ExtendScript (.jsx) に変換します。縦書き・CMYK・テキストフレーム対応。"),
+        categoryId: ToolCategoryId.STANDARD_TOOLS,
+        subcategoryId: SubcategoryId.PAGE_FORMATTING,
+        endpoints: ["pdf-to-indesign-script"],
+        maxFiles: 1,
+        synonyms: getSynonyms(t, "pdfToInDesignScript"),
         supportsAutomate: false,
       },
       pdfToSinglePage: {
