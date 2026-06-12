@@ -34,7 +34,7 @@ public class PdfToInDesignScriptService {
 
     private final ApplicationProperties applicationProperties;
     private final GeminiOcrClient geminiOcrClient;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String SYSTEM_INSTRUCTION =
         "#役割\n"
