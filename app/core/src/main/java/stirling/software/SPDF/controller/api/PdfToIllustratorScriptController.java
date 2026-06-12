@@ -38,11 +38,12 @@ public class PdfToIllustratorScriptController {
 
     @AutoJobPostMapping(value = "/pdf-to-illustrator-script", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
-            summary = "PDF to Adobe Illustrator Script (PDFからIllustratorスクリプト生成)",
+            summary = "PDF to Adobe InDesign Script (PDFからInDesignスクリプト生成)",
             description =
-                    "Converts a PDF to an Adobe Illustrator ExtendScript (.jsx) file using Gemini AI. "
-                            + "The generated script recreates the PDF layout in Illustrator, "
-                            + "including vertical Japanese text. Requires Google Cloud (Vertex AI) configuration. "
+                    "Converts a PDF to an Adobe InDesign ExtendScript (.jsx) file using Gemini AI. "
+                            + "The generated script recreates the PDF layout in InDesign, "
+                            + "including vertical Japanese text (縦書き), CMYK colors, and text frames. "
+                            + "Requires Google Cloud (Vertex AI) configuration. "
                             + "Input:PDF Output:JSX Type:SISO")
     public ResponseEntity<byte[]> convertPdfToIllustratorScript(
             @ModelAttribute PDFFile request) throws Exception {

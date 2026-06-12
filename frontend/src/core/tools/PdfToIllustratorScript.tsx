@@ -24,7 +24,7 @@ const PdfToIllustratorScript = (props: BaseToolProps) => {
     },
     steps: [],
     executeButton: {
-      text: t('pdfToIllustratorScript.submit', 'Illustratorスクリプトを生成'),
+      text: t('pdfToIllustratorScript.submit', 'InDesignスクリプトを生成'),
       isVisible: !base.hasResults,
       loadingText: t('pdfToIllustratorScript.loading', 'Geminiで変換中…'),
       onClick: base.handleExecute,
@@ -34,7 +34,7 @@ const PdfToIllustratorScript = (props: BaseToolProps) => {
     review: {
       isVisible: base.hasResults,
       operation: base.operation,
-      title: t('pdfToIllustratorScript.result', 'Illustratorスクリプト生成完了'),
+      title: t('pdfToIllustratorScript.result', 'InDesignスクリプト生成完了'),
       onFileClick: base.handleThumbnailClick,
       onUndo: base.handleUndo,
     },

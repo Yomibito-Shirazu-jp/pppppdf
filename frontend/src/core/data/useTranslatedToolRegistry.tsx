@@ -600,11 +600,11 @@ export function useTranslatedToolCatalog(): TranslatedToolCatalog {
       },
       pdfToIllustratorScript: {
         icon: <LocalIcon icon="code-rounded" width="1.5rem" height="1.5rem" />,
-        name: t("home.pdfToIllustratorScript.title", "PDFからIllustratorスクリプト生成"),
+        name: t("home.pdfToIllustratorScript.title", "PDFからInDesignスクリプト生成"),
         component: PdfToIllustratorScript,
         operationConfig: pdfToIllustratorScriptOperationConfig,
         automationSettings: null,
-        description: t("home.pdfToIllustratorScript.desc", "GeminiAIを使用してPDFをAdobe Illustrator ExtendScript (.jsx) に変換します。縦書き・横書き対応。"),
+        description: t("home.pdfToIllustratorScript.desc", "GeminiAIを使用してPDFをAdobe InDesign ExtendScript (.jsx) に変換します。縦書き・CMYK・テキストフレーム対応。"),
         categoryId: ToolCategoryId.STANDARD_TOOLS,
         subcategoryId: SubcategoryId.PAGE_FORMATTING,
         endpoints: ["pdf-to-illustrator-script"],
