@@ -13,7 +13,7 @@
     "@embedpdf/models": "^2.8.0",
     "@embedpdf/plugin-annotation": "^2.8.0",
     "@embedpdf/plugin-attachment": "^2.8.0",
-    "@embedpdf/plugin-bookmark": "^2.8.0",
+    "@embedpdf/plugin-bookmark": "^2.14.0",
     "@embedpdf/plugin-document-manager": "^2.8.0",
     "@embedpdf/plugin-export": "^2.8.0",
     "@embedpdf/plugin-history": "^2.8.0",
